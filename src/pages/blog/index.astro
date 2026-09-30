@@ -1,15 +1,13 @@
 ---
 import PostList from '../../components/PostList.astro';
 import Base from '../../layouts/Base.astro';
-import { PROMPT } from '../../consts';
 import { getPosts } from '../../utils';
 
 const posts = await getPosts();
 ---
 
 <Base title="Posts" description="Every post on this blog, newest first.">
-	<p class="line"><span class="prompt">{PROMPT}</span> <span class="cmd">ls -lt posts/</span></p>
-	<p class="dim line">total {posts.length}</p>
+	<h1>Posts</h1>
+	<p class="muted">{posts.length} {posts.length === 1 ? 'post' : 'posts'}, newest first.</p>
 	<PostList posts={posts} />
-	<p class="line"><span class="prompt">{PROMPT}</span> <span class="cursor"></span></p>
 </Base>

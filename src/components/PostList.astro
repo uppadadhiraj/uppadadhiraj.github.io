@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { fileSize, isoDate, link } from '../utils';
+import { isoDate, link } from '../utils';
 
 interface Props {
 	posts: CollectionEntry<'blog'>[];
@@ -11,21 +11,19 @@ const { posts } = Astro.props;
 
 {
 	posts.length === 0 ? (
-		<p class="dim">ls: posts/: directory is empty</p>
+		<p class="muted">No posts yet.</p>
 	) : (
-		<ul class="ls">
+		<ul class="posts">
 			{posts.map((post) => (
 				<li>
-					<span class="perm dim" aria-hidden="true">-rw-r--r--</span>
-					<time class="date" datetime={post.data.pubDate.toISOString()}>
-						{isoDate(post.data.pubDate)}
-					</time>
-					<span class="size dim" aria-hidden="true">{fileSize(post.body)}</span>
-					<span class="name">
-						<a href={link(`/blog/${post.id}/`)}>{post.data.title}</a>
-						{post.data.draft && <span class="draft">[DRAFT]</span>}
-					</span>
-					<span class="desc dim">{post.data.description}</span>
+					<a class="card" href={link(`/blog/${post.id}/`)}>
+						<time datetime={post.data.pubDate.toISOString()}>{isoDate(post.data.pubDate)}</time>
+						<h3>
+							{post.data.title}
+							{post.data.draft && <span class="draft">Draft</span>}
+						</h3>
+						<p>{post.data.description}</p>
+					</a>
 				</li>
 			))}
 		</ul>
@@ -33,42 +31,48 @@ const { posts } = Astro.props;
 }
 
 <style>
-	.ls {
+	.posts {
 		list-style: none;
-		margin: 0.4em 0 1.2em;
+		margin: 0;
 		padding: 0;
-	}
-	.ls li {
 		display: grid;
-		grid-template-columns: 10ch 10ch 5ch minmax(0, 1fr);
-		column-gap: 2ch;
-		padding: 6px 0;
-		border-bottom: 1px dotted var(--ph-faint);
+		gap: 16px;
 	}
-	.size {
-		text-align: right;
+	.card {
+		display: block;
+		padding: 18px 22px;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		color: var(--text);
+		text-decoration: none;
+		transition: border-color 0.15s;
 	}
-	.desc {
-		grid-column: 4;
+	.card:hover {
+		border-color: var(--accent);
+	}
+	time {
+		font-size: 0.85rem;
+		color: var(--muted);
+	}
+	h3 {
+		margin: 2px 0 4px;
+		font-size: 1.2rem;
+	}
+	.card:hover h3 {
+		color: var(--accent);
+	}
+	p {
+		margin: 0;
+		color: var(--muted);
 	}
 	.draft {
-		margin-left: 1ch;
-		color: var(--ph-dim);
-	}
-	@media (max-width: 640px) {
-		.ls li {
-			grid-template-columns: minmax(0, 1fr);
-		}
-		.perm,
-		.size {
-			display: none;
-		}
-		.date {
-			color: var(--ph-dim);
-			font-size: 0.9em;
-		}
-		.desc {
-			grid-column: 1;
-		}
+		margin-left: 8px;
+		padding: 1px 8px;
+		font-size: 0.75rem;
+		border-radius: 999px;
+		background: var(--accent-soft);
+		color: var(--accent);
+		vertical-align: middle;
 	}
 </style>

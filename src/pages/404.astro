@@ -1,42 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import { PROMPT } from '../consts';
 import { link } from '../utils';
 ---
 
 <Base title="404" description="Page not found.">
-	<p class="line">
-		<span class="prompt">{PROMPT}</span> <span class="cmd">cd <span class="missing">that-page</span></span>
-	</p>
-	<p class="line">bash: cd: <span class="missing">that-page</span>: No such file or directory</p>
-
-	<pre class="big" aria-hidden="true">
- _  _    ___   _  _
-| || |  / _ \ | || |
-| || |_| | | || || |_
-|__   _| |_| ||__   _|
-   |_|  \___/    |_|</pre>
-
-	<p class="dim">That page doesn't exist, or it moved somewhere else.</p>
-	<p>
-		<a href={link('/')}>[ RETURN HOME ]</a>&nbsp;&nbsp;<a href={link('/blog/')}>[ LIST POSTS ]</a>
-	</p>
-	<p class="line"><span class="prompt">{PROMPT}</span> <span class="cursor"></span></p>
+	<h1>Page not found</h1>
+	<p class="muted">That page doesn't exist, or it moved somewhere else.</p>
+	<p><a href={link('/')}>← Back home</a> · <a href={link('/blog/')}>All posts</a></p>
 </Base>
-
-<script is:inline>
-	document.querySelectorAll('.missing').forEach(function (el) {
-		el.textContent = decodeURIComponent(location.pathname);
-	});
-</script>
-
-<style>
-	.big {
-		border: none;
-		padding: 0;
-		margin: 24px 0;
-		font-size: 1.3em;
-		line-height: 1;
-		overflow: visible;
-	}
-</style>

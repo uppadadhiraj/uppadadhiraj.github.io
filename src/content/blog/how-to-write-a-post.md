@@ -70,7 +70,7 @@ Put images in `src/content/blog/images/` and link them with a relative path:
 
 ![Colour test card](./images/test-card.png)
 
-Images get a phosphor tint to match the screen. Hover over one (or tap it on a phone) to see the real colours.
+Images are scaled to fit the page automatically.
 
 ---
 

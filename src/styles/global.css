@@ -1,102 +1,65 @@
 /* ════════════════════════════════════════════════════════════
-   RETRO TERMINAL THEME
-   Monochrome phosphor on a dark CRT. No rounded corners,
-   no gradients-as-decoration, no drop shadows, no easing.
+   CLEAN BLOG THEME
+   Light and dark colours follow the visitor's system setting.
+   Change the accent colour and fonts in :root below.
    ════════════════════════════════════════════════════════════ */
 
 :root {
-	--ph: #33ff66;            /* phosphor: main text */
-	--ph-dim: #1f9e44;        /* secondary text, borders */
-	--ph-faint: #0c3d1b;      /* inline-code background, faint lines */
-	--screen: #030803;        /* the tube */
-	--ph-rgb: 51, 255, 102;
-	--img-tint: grayscale(1) sepia(1) hue-rotate(75deg) saturate(3) brightness(0.9);
+	--bg: #fafaf7;
+	--surface: #ffffff;
+	--text: #1f2328;
+	--muted: #6b7280;
+	--border: #e5e5df;
+	--accent: #2f6fed;
+	--accent-soft: #e8f0fe;
+	--code-bg: #f3f3ee;
 
-	--glow: 0 0 1px rgba(var(--ph-rgb), 0.9), 0 0 6px rgba(var(--ph-rgb), 0.45);
+	--font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+	--width: 720px;
 
-	--fs: 22px;
-	--lh: 1.35;
-	--cols: 80ch;             /* a classic 80-column terminal */
-
-	color-scheme: dark;
+	color-scheme: light dark;
 }
 
-:root[data-phosphor='amber'] {
-	--ph: #ffb000;
-	--ph-dim: #b87a00;
-	--ph-faint: #3d2a00;
-	--screen: #0a0600;
-	--ph-rgb: 255, 176, 0;
-	--img-tint: grayscale(1) sepia(1) hue-rotate(-8deg) saturate(3.5) brightness(0.95);
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #14161a;
+		--surface: #1c1f25;
+		--text: #e6e8eb;
+		--muted: #9aa3ad;
+		--border: #2b2f36;
+		--accent: #7aa7ff;
+		--accent-soft: #1f2a44;
+		--code-bg: #23272e;
+	}
 }
 
 *,
 *::before,
 *::after {
 	box-sizing: border-box;
-	border-radius: 0 !important; /* nothing rounded, ever */
 }
 
 html {
-	background: var(--screen);
-	scrollbar-color: var(--ph-dim) var(--screen);
+	background: var(--bg);
 }
 
 body {
 	margin: 0;
 	min-height: 100vh;
-	background: var(--screen);
-	color: var(--ph);
-	font-family: 'VT323', 'Courier New', Courier, monospace;
-	font-size: var(--fs);
-	line-height: var(--lh);
-	text-shadow: var(--glow);
-	-webkit-font-smoothing: none;
-	font-smooth: never;
+	background: var(--bg);
+	color: var(--text);
+	font-family: var(--font);
+	font-size: 17px;
+	line-height: 1.7;
+	-webkit-font-smoothing: antialiased;
 	overflow-wrap: break-word;
 }
 
-/* CRT scanlines + dark tube edges, layered over everything */
-body::after {
-	content: '';
-	position: fixed;
-	inset: 0;
-	pointer-events: none;
-	z-index: 100;
-	background: repeating-linear-gradient(
-		to bottom,
-		rgba(0, 0, 0, 0.28) 0px,
-		rgba(0, 0, 0, 0.28) 1px,
-		transparent 1px,
-		transparent 3px
-	);
-	box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.85);
-}
-
-::selection {
-	background: var(--ph);
-	color: var(--screen);
-	text-shadow: none;
-}
-
-::-webkit-scrollbar {
-	width: 14px;
-	height: 14px;
-}
-::-webkit-scrollbar-track {
-	background: var(--screen);
-	border-left: 1px solid var(--ph-faint);
-}
-::-webkit-scrollbar-thumb {
-	background: var(--ph-dim);
-}
-
-/* ── Layout ─────────────────────────────────────────────── */
-
-.crt {
-	max-width: calc(var(--cols) + 2 * 24px);
+.page {
+	max-width: calc(var(--width) + 2 * 24px);
 	margin: 0 auto;
-	padding: 24px;
+	padding: 0 24px;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -104,7 +67,7 @@ body::after {
 
 main {
 	flex: 1;
-	padding: 8px 0 32px;
+	padding: 24px 0 48px;
 }
 
 /* ── Type ───────────────────────────────────────────────── */
@@ -113,91 +76,47 @@ h1,
 h2,
 h3,
 h4 {
-	font-weight: normal;
-	line-height: 1.1;
-	margin: 1.4em 0 0.5em;
+	line-height: 1.25;
+	margin: 1.8em 0 0.5em;
+	letter-spacing: -0.01em;
 }
 h1 {
-	font-size: 2.1em;
-	text-transform: uppercase;
+	font-size: 2rem;
+	margin-top: 0;
 }
 h2 {
-	font-size: 1.55em;
+	font-size: 1.5rem;
 }
 h3 {
-	font-size: 1.25em;
-}
-h4 {
-	font-size: 1.05em;
-	text-transform: uppercase;
+	font-size: 1.2rem;
 }
 
 p {
-	margin: 0 0 0.9em;
+	margin: 0 0 1.1em;
 }
 
 a {
-	color: var(--ph);
-	text-decoration: underline;
+	color: var(--accent);
 	text-underline-offset: 3px;
 }
-a:hover,
-a:focus-visible {
-	background: var(--ph);
-	color: var(--screen);
-	text-shadow: none;
-	text-decoration: none;
-	outline: none;
+a:hover {
+	text-decoration-thickness: 2px;
 }
-
-strong,
-b {
-	font-weight: normal;
-	background: var(--ph-faint);
-	padding: 0 2px;
-}
-
-em,
-i {
-	font-style: normal;
-	text-decoration: underline dotted;
-	text-underline-offset: 3px;
+a:focus-visible,
+button:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 4px;
 }
 
 hr {
 	border: none;
-	border-top: 1px dashed var(--ph-dim);
-	margin: 1.5em 0;
+	border-top: 1px solid var(--border);
+	margin: 2em 0;
 }
 
-.dim {
-	color: var(--ph-dim);
-}
-
-.prompt {
-	color: var(--ph-dim);
-}
-.prompt + .cmd {
-	color: var(--ph);
-}
-
-.cursor {
-	display: inline-block;
-	width: 0.6em;
-	height: 1em;
-	vertical-align: -0.12em;
-	background: var(--ph);
-	box-shadow: var(--glow);
-	animation: blink 1s steps(1) infinite;
-}
-@keyframes blink {
-	50% {
-		opacity: 0;
-	}
-}
-
-.line {
-	margin: 0;
+.muted {
+	color: var(--muted);
 }
 
 .sr-only {
@@ -209,114 +128,72 @@ hr {
 	white-space: nowrap;
 }
 
-/* ── Buttons that look like terminal keys ───────────────── */
-
-.key {
-	font: inherit;
-	color: var(--ph);
-	background: transparent;
-	border: 1px solid var(--ph-dim);
-	padding: 0 8px;
-	cursor: pointer;
-	text-shadow: inherit;
-}
-.key:hover,
-.key:focus-visible {
-	background: var(--ph);
-	color: var(--screen);
-	text-shadow: none;
-	outline: none;
-}
-
 /* ── Post body (Markdown) ───────────────────────────────── */
 
-.prose h2::before {
-	content: '## ';
-	color: var(--ph-dim);
-}
-.prose h3::before {
-	content: '### ';
-	color: var(--ph-dim);
-}
-.prose h4::before {
-	content: '#### ';
-	color: var(--ph-dim);
-}
-
-.prose ul {
-	list-style: none;
-	padding-left: 2ch;
-}
-.prose ul > li::before {
-	content: '*';
-	display: inline-block;
-	width: 2ch;
-	margin-left: -2ch;
-	color: var(--ph-dim);
-}
+.prose ul,
 .prose ol {
-	padding-left: 3ch;
-}
-.prose ol > li::marker {
-	color: var(--ph-dim);
+	padding-left: 1.4em;
+	margin: 0 0 1.1em;
 }
 .prose li {
-	margin-bottom: 0.25em;
+	margin-bottom: 0.3em;
 }
 
 .prose blockquote {
-	margin: 1.2em 0;
-	padding: 0;
-	color: var(--ph-dim);
+	margin: 1.4em 0;
+	padding: 0.2em 1em;
+	border-left: 3px solid var(--accent);
+	color: var(--muted);
+	background: var(--accent-soft);
+	border-radius: 0 6px 6px 0;
 }
-.prose blockquote p::before {
-	content: '> ';
+.prose blockquote p:last-child {
+	margin-bottom: 0;
 }
 
-pre,
 code,
+pre,
 kbd,
 samp {
-	/* browsers force a different monospace here; keep the terminal font */
-	font-family: 'VT323', 'Courier New', Courier, monospace;
+	font-family: var(--mono);
 }
 code {
-	font-size: 1em;
-	background: var(--ph-faint);
-	padding: 0 4px;
+	font-size: 0.9em;
+	background: var(--code-bg);
+	padding: 0.15em 0.4em;
+	border-radius: 4px;
 }
 pre {
-	margin: 1.2em 0;
-	padding: 12px 14px;
-	border: 1px solid var(--ph-dim);
-	background: transparent;
+	margin: 1.4em 0;
+	padding: 16px 18px;
+	background: var(--code-bg);
+	border: 1px solid var(--border);
+	border-radius: 8px;
 	overflow-x: auto;
-	line-height: 1.2;
+	line-height: 1.55;
+	font-size: 0.9rem;
 }
 pre code {
 	background: none;
 	padding: 0;
+	font-size: inherit;
 }
 
 .prose table {
 	width: 100%;
 	border-collapse: collapse;
-	margin: 1.2em 0;
+	margin: 1.4em 0;
 	display: block;
 	overflow-x: auto;
 }
 .prose th,
 .prose td {
-	border: 1px solid var(--ph-dim);
-	padding: 2px 10px;
+	border: 1px solid var(--border);
+	padding: 8px 12px;
 	text-align: left;
 }
 .prose th {
-	background: var(--ph);
-	color: var(--screen);
-	text-shadow: none;
-	font-weight: normal;
-	text-transform: uppercase;
+	background: var(--code-bg);
 }
 
 img {
@@ -326,32 +203,18 @@ img {
 }
 .prose img,
 .hero img {
-	border: 1px solid var(--ph-dim);
-	filter: var(--img-tint);
-	margin: 1.2em 0;
+	border-radius: 8px;
+	margin: 1.4em 0;
 }
-/* hover (or tap) an image to see its real colours */
-.prose img:hover,
-.hero img:hover {
-	filter: none;
-}
-
-/* ── Small screens ──────────────────────────────────────── */
 
 @media (max-width: 640px) {
-	:root {
-		--fs: 20px;
+	body {
+		font-size: 16px;
 	}
-	.crt {
-		padding: 16px;
+	.page {
+		padding: 0 16px;
 	}
 	h1 {
-		font-size: 1.7em;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.cursor {
-		animation: none;
+		font-size: 1.65rem;
 	}
 }

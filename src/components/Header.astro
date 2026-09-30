@@ -5,27 +5,23 @@ import { link } from '../utils';
 const path = Astro.url.pathname;
 const home = link('/');
 const items = [
-	{ key: '1', label: 'HOME', href: home, active: path === home || path === `${home}index.html` },
-	{ key: '2', label: 'POSTS', href: link('/blog/'), active: path.startsWith(link('/blog')) },
-	{ key: '3', label: 'ABOUT', href: link('/about/'), active: path.startsWith(link('/about')) },
+	{ label: 'Home', href: home, active: path === home || path === `${home}index.html` },
+	{ label: 'Posts', href: link('/blog/'), active: path.startsWith(link('/blog')) },
+	{ label: 'About', href: link('/about/'), active: path.startsWith(link('/about')) },
 ];
 ---
 
-<header class="masthead">
-	<div class="title-box">
-		<a class="site-title" href={home}>{SITE_TITLE}</a>
-		<span class="ver dim">v1.0</span>
-	</div>
+<header>
+	<a class="site-title" href={home}>{SITE_TITLE}</a>
 	<nav aria-label="Main">
 		{
 			items.map((item) => (
 				<a
 					href={item.href}
-					data-key={item.key}
 					class:list={['nav-link', { active: item.active }]}
 					aria-current={item.active ? 'page' : undefined}
 				>
-					<span class="k">[{item.key}]</span> {item.label}
+					{item.label}
 				</a>
 			))
 		}
@@ -33,51 +29,37 @@ const items = [
 </header>
 
 <style>
-	.masthead {
-		margin-bottom: 8px;
-	}
-	.title-box {
+	header {
 		display: flex;
-		align-items: baseline;
+		flex-wrap: wrap;
+		align-items: center;
 		justify-content: space-between;
-		gap: 16px;
-		border: 4px double var(--ph);
-		padding: 6px 16px 8px;
-		box-shadow: 0 0 6px rgba(var(--ph-rgb), 0.35);
+		gap: 8px 24px;
+		padding: 24px 0;
+		border-bottom: 1px solid var(--border);
 	}
 	.site-title {
-		font-size: clamp(2rem, 8vw, 3.4rem);
-		line-height: 1;
-		letter-spacing: 0.06em;
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: var(--text);
 		text-decoration: none;
-		text-transform: uppercase;
-		min-width: 0;
-	}
-	.ver {
-		flex-shrink: 0;
 	}
 	nav {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 4px 3ch;
-		padding: 10px 0 6px;
-		border-bottom: 1px dashed var(--ph-dim);
+		gap: 4px;
 	}
 	.nav-link {
+		color: var(--muted);
 		text-decoration: none;
-		padding: 0 4px;
+		padding: 4px 12px;
+		border-radius: 999px;
 	}
-	.nav-link .k {
-		color: var(--ph-dim);
+	.nav-link:hover {
+		color: var(--text);
 	}
 	.nav-link.active {
-		background: var(--ph);
-		color: var(--screen);
-		text-shadow: none;
-	}
-	.nav-link.active .k,
-	.nav-link:hover .k,
-	.nav-link:focus-visible .k {
-		color: var(--screen);
+		background: var(--accent-soft);
+		color: var(--accent);
+		font-weight: 600;
 	}
 </style>

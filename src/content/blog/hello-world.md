@@ -32,6 +32,6 @@ public class Hello {
 
 One line versus five. More on that in a later post.
 
-> Tip: press `2` to see every post, or `T` to switch the screen from green to amber.
+> Tip: use the Posts tab at the top to see everything I have written.
 
 See you in the next one.

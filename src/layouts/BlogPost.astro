@@ -2,8 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Base from './Base.astro';
-import { PROMPT } from '../consts';
-import { fileSize, isoDate, link, readMinutes } from '../utils';
+import { isoDate, link, readMinutes } from '../utils';
 
 type Post = CollectionEntry<'blog'>;
 interface Props {
@@ -17,23 +16,19 @@ const { title, description, pubDate, updatedDate, heroImage, draft } = post.data
 ---
 
 <Base title={title} description={description} image={heroImage}>
-	<p class="line">
-		<span class="prompt">{PROMPT}</span> <span class="cmd">cat posts/{post.id}.md</span>
-	</p>
-
 	<article>
 		<header class="post-head">
-			<h1>{title}{draft && <span class="dim"> [DRAFT]</span>}</h1>
-			<p class="meta dim">
+			<h1>{title}{draft && <span class="muted"> (draft)</span>}</h1>
+			<p class="meta muted">
 				<time datetime={pubDate.toISOString()}>{isoDate(pubDate)}</time>
 				{
 					updatedDate && (
 						<>
-							{' '}| UPDATED <time datetime={updatedDate.toISOString()}>{isoDate(updatedDate)}</time>
+							{' '}· updated <time datetime={updatedDate.toISOString()}>{isoDate(updatedDate)}</time>
 						</>
 					)
 				}
-				{' '}| {readMinutes(post.body)} MIN READ | {fileSize(post.body)}
+				{' '}· {readMinutes(post.body)} min read
 			</p>
 		</header>
 
@@ -48,41 +43,41 @@ const { title, description, pubDate, updatedDate, heroImage, draft } = post.data
 		<div class="prose">
 			<slot />
 		</div>
-
-		<p class="eof dim">-- EOF --</p>
 	</article>
 
 	<nav class="post-nav" aria-label="More posts">
-		{older && <a href={link(`/blog/${older.id}/`)}>&lt; OLDER: {older.data.title}</a>}
-		{newer && <a href={link(`/blog/${newer.id}/`)}>NEWER: {newer.data.title} &gt;</a>}
-		<a href={link('/blog/')}>[ cd ../posts ]</a>
+		{older && <a href={link(`/blog/${older.id}/`)}>← {older.data.title}</a>}
+		{newer && <a class="right" href={link(`/blog/${newer.id}/`)}>{newer.data.title} →</a>}
+		<a class="all" href={link('/blog/')}>All posts</a>
 	</nav>
 </Base>
 
 <style>
 	.post-head {
-		margin: 18px 0 8px;
-		padding-bottom: 10px;
-		border-bottom: 1px dashed var(--ph-dim);
+		padding-bottom: 16px;
+		margin-bottom: 24px;
+		border-bottom: 1px solid var(--border);
 	}
 	.post-head h1 {
-		margin: 0 0 6px;
+		margin-bottom: 6px;
 	}
 	.meta {
 		margin: 0;
-	}
-	.eof {
-		margin-top: 2em;
-		text-align: center;
+		font-size: 0.95rem;
 	}
 	.post-nav {
 		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		padding-top: 12px;
-		border-top: 1px dashed var(--ph-dim);
+		flex-wrap: wrap;
+		gap: 8px 24px;
+		margin-top: 48px;
+		padding-top: 16px;
+		border-top: 1px solid var(--border);
 	}
-	.post-nav a {
-		align-self: flex-start;
+	.right {
+		margin-left: auto;
+	}
+	.all {
+		flex-basis: 100%;
+		color: var(--muted);
 	}
 </style>

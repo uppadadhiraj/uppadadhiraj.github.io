@@ -1,87 +1,41 @@
 ---
 import PostList from '../components/PostList.astro';
 import Base from '../layouts/Base.astro';
-import { AUTHOR, PROMPT, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { AUTHOR, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getPosts, link } from '../utils';
 
 const posts = await getPosts();
 const latest = posts.slice(0, 5);
-
-const boot = [
-	`RETRO-BIOS v1.0   (C) ${new Date().getFullYear()} ${AUTHOR.toUpperCase()}`,
-	'MEMORY TEST ........ 640K OK',
-	'LOADING BLOG.SYS ... OK',
-	`MOUNTING /posts .... ${posts.length} FILE${posts.length === 1 ? '' : 'S'} FOUND`,
-	'SYSTEM READY.',
-];
 ---
 
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<!-- Boot sequence plays once per visit, then shows instantly -->
-	<script is:inline>
-		try {
-			if (sessionStorage.getItem('booted')) document.documentElement.classList.add('booted');
-			sessionStorage.setItem('booted', '1');
-		} catch (e) {
-			document.documentElement.classList.add('booted');
-		}
-	</script>
-
-	<section class="boot dim" aria-hidden="true">
-		{boot.map((text, i) => <p class="line" style={`--d:${0.15 + i * 0.28}s`}>{text}</p>)}
+	<section class="intro">
+		<h1>Hi, I'm {AUTHOR} 👋</h1>
+		<p class="muted">{SITE_DESCRIPTION}</p>
 	</section>
 
-	<div class="after-boot" style={`--d:${0.15 + boot.length * 0.28}s`}>
-		<p class="line"><span class="prompt">{PROMPT}</span> <span class="cmd">whoami</span></p>
-		<p class="out">{SITE_DESCRIPTION}</p>
-
-		<p class="line">
-			<span class="prompt">{PROMPT}</span> <span class="cmd">ls -lt posts/ | head -5</span>
-		</p>
-		<PostList posts={latest} />
-		{
-			posts.length > latest.length && (
-				<p>
-					<a href={link('/blog/')}>
-						+ {posts.length - latest.length} more &gt; cd posts/
-					</a>
-				</p>
-			)
-		}
-
-		<p class="line"><span class="prompt">{PROMPT}</span> <span class="cursor"></span></p>
-	</div>
+	<h2>Latest posts</h2>
+	<PostList posts={latest} />
+	{
+		posts.length > latest.length && (
+			<p class="more">
+				<a href={link('/blog/')}>See all {posts.length} posts →</a>
+			</p>
+		)
+	}
 </Base>
 
 <style>
-	.boot {
-		padding: 10px 0 12px;
-		margin-bottom: 14px;
-		border-bottom: 1px dashed var(--ph-faint);
+	.intro {
+		padding: 16px 0 8px;
 	}
-	.out {
-		margin: 0 0 1em;
+	.intro p {
+		font-size: 1.15rem;
 	}
-	.boot .line,
-	.after-boot {
-		visibility: hidden;
-		animation: appear 0s linear var(--d) forwards;
+	h2 {
+		margin-top: 1.2em;
 	}
-	@keyframes appear {
-		to {
-			visibility: visible;
-		}
-	}
-	:global(html.booted) .boot .line,
-	:global(html.booted) .after-boot {
-		animation: none;
-		visibility: visible;
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.boot .line,
-		.after-boot {
-			animation: none;
-			visibility: visible;
-		}
+	.more {
+		margin-top: 20px;
 	}
 </style>
