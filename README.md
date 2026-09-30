@@ -71,12 +71,12 @@ Open http://localhost:4321. The page reloads as you edit.
 |------|------------------|
 | `src/consts.ts` | Blog name, tagline, your name, GitHub link |
 | `src/styles/global.css` | Colours and fonts (see `:root` at the top) |
-| `src/sprites.ts` | The pixel art (one string per row) |
+| `src/sprites.ts` | The small pixel-art computer icon |
 | `src/pages/about.astro` | The About page text |
 | `astro.config.mjs` | The site address (`site:`) |
 
-The look is a retro pixel theme: pixel fonts, notched pixel borders, hard shadows, a faint pixel grid and
-a small pixel-art computer (see `src/sprites.ts` to draw your own).
+The look is a 90s Windows-style desktop: teal background, a grey window with a title bar, menu bar and
+address bar, a taskbar with a working Start menu and clock, and dialog boxes on the About and 404 pages.
 
 ## Publishing setup (one time)
 
@@ -91,8 +91,8 @@ After that, every `git push` to `main` updates the site.
 src/
 ├─ consts.ts            site name, author, links
 ├─ styles/global.css    the whole look
-├─ sprites.ts           pixel art
-├─ components/          header, footer, post list, sprite
+├─ sprites.ts           pixel icon
+├─ components/          window chrome, taskbar, post list
 ├─ layouts/             page shell and post layout
 ├─ pages/               home, posts, about, 404, rss
 └─ content/blog/        your posts (.md) and images/

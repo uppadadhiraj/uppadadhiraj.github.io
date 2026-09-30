@@ -16,12 +16,10 @@ const { title, description, pubDate, updatedDate, heroImage, tags, draft } = pos
 ---
 
 <Base title={title} description={description} image={heroImage}>
-	<p class="back"><a class="btn" href={link('/blog/')}>&lt; All posts</a></p>
-
-	<article class="px">
+	<article>
 		<header class="post-head">
-			<h1>{title}{draft && <span class="muted"> [draft]</span>}</h1>
-			<p class="meta">
+			<h1>{title}{draft && <span class="muted"> (draft)</span>}</h1>
+			<p class="meta muted">
 				<time datetime={pubDate.toISOString()}>{isoDate(pubDate)}</time>
 				{
 					updatedDate && (
@@ -56,30 +54,29 @@ const { title, description, pubDate, updatedDate, heroImage, tags, draft } = pos
 		</div>
 	</article>
 
-	{
-		(older || newer) && (
-			<nav class="post-nav" aria-label="More posts">
-				{older ? (
-					<a class="btn older" href={link(`/blog/${older.id}/`)}>
-						<span class="dir">&lt; Older</span>
-						<span class="t">{older.data.title}</span>
-					</a>
-				) : (
-					<span />
-				)}
-				{newer && (
-					<a class="btn newer" href={link(`/blog/${newer.id}/`)}>
-						<span class="dir">Newer &gt;</span>
-						<span class="t">{newer.data.title}</span>
-					</a>
-				)}
-			</nav>
-		)
-	}
+	<nav class="post-nav" aria-label="More posts">
+		<a class="btn all" href={link('/blog/')}>&lt; All posts</a>
+		{
+			older && (
+				<a class="btn older" href={link(`/blog/${older.id}/`)}>
+					<span class="dir">&lt; Older</span>
+					<span class="t">{older.data.title}</span>
+				</a>
+			)
+		}
+		{
+			newer && (
+				<a class="btn newer" href={link(`/blog/${newer.id}/`)}>
+					<span class="dir">Newer &gt;</span>
+					<span class="t">{newer.data.title}</span>
+				</a>
+			)
+		}
+	</nav>
 </Base>
 
 <script>
-	// Give every code block a header with its language and a copy button.
+	// Give every code block a title bar with its language and a copy button.
 	document.querySelectorAll<HTMLPreElement>('.prose pre').forEach((pre) => {
 		const lang = pre.querySelector('code')?.className.match(/language-(\S+)/)?.[1] ?? 'code';
 
@@ -111,66 +108,67 @@ const { title, description, pubDate, updatedDate, heroImage, tags, draft } = pos
 </script>
 
 <style>
-	.back {
-		margin: 0 0 32px;
-	}
-	article {
-		padding: 32px 36px 36px;
-	}
 	.post-head {
-		padding-bottom: 20px;
-		margin-bottom: 28px;
-		background: repeating-linear-gradient(90deg, var(--line-dim) 0 8px, transparent 8px 16px) bottom / 100% 4px
-			no-repeat;
+		padding-bottom: 16px;
+		margin-bottom: 24px;
+		border-bottom: 1px solid var(--shadow);
+		box-shadow: 0 1px 0 var(--hi);
 	}
 	.post-head h1 {
-		margin-bottom: 18px;
+		margin-bottom: 10px;
 	}
 	.meta {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 4px 20px;
-		margin: 0 0 14px;
-		color: var(--muted);
+		gap: 2px 18px;
+		margin: 0 0 10px;
+		font-size: 0.92rem;
 	}
 	.tags {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px;
+		gap: 8px;
 		margin: 0;
 	}
 	.post-nav {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 28px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
 		margin-top: 44px;
+		padding-top: 20px;
+		border-top: 1px solid var(--shadow);
+		box-shadow: 0 -1px 0 var(--hi);
 	}
 	.post-nav .btn {
+		text-align: left;
+	}
+	.older,
+	.newer {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
-		padding: 14px 16px;
-		line-height: 1.4;
+		gap: 4px;
+		max-width: 100%;
+		min-width: 0;
 	}
 	.newer {
-		grid-column: 2;
+		margin-left: auto;
 		text-align: right;
 	}
+	.dir {
+		font-size: 12px;
+		color: var(--muted);
+	}
 	.t {
-		font-family: var(--body);
-		font-size: 1.3rem;
-		text-transform: none;
+		font-weight: 700;
 		overflow-wrap: anywhere;
 	}
 	@media (max-width: 640px) {
-		article {
-			padding: 22px 18px 26px;
-		}
-		.post-nav {
-			grid-template-columns: minmax(0, 1fr);
-		}
 		.newer {
-			grid-column: 1;
+			margin-left: 0;
+			text-align: left;
+		}
+		.post-nav .btn {
+			flex: 1 1 100%;
 		}
 	}
 </style>

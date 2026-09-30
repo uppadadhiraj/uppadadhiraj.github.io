@@ -1,9 +1,14 @@
 ---
 import Sprite from './Sprite.astro';
-import { SITE_TITLE } from '../consts';
+import { GITHUB_URL, SITE_TITLE } from '../consts';
 import { MONITOR } from '../sprites';
 import { link } from '../utils';
 
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
 const path = Astro.url.pathname;
 const home = link('/');
 const items = [
@@ -11,68 +16,192 @@ const items = [
 	{ label: 'Posts', href: link('/blog/'), active: path.startsWith(link('/blog')) },
 	{ label: 'About', href: link('/about/'), active: path.startsWith(link('/about')) },
 ];
+const windowTitle = title === SITE_TITLE ? SITE_TITLE : `${title} - ${SITE_TITLE}`;
+const address = new URL(path, Astro.site).href;
 ---
 
 <header>
-	<a class="brand" href={home} aria-label={`${SITE_TITLE}, home`}>
-		<Sprite art={MONITOR} size={3} class="brand-sprite" />
-		<span>{SITE_TITLE}</span>
-	</a>
-	<nav aria-label="Main">
-		{
-			items.map((item) => (
-				<a
-					href={item.href}
-					class:list={['btn', { 'is-current': item.active }]}
-					aria-current={item.active ? 'page' : undefined}
-				>
-					{item.label}
-				</a>
-			))
-		}
+	<div class="titlebar">
+		<Sprite art={MONITOR} size={2} class="tb-icon" />
+		<span class="tb-text">{windowTitle}</span>
+		<span class="tb-btns" aria-hidden="true">
+			<i class="min"></i><i class="max"></i><i class="close">&times;</i>
+		</span>
+	</div>
+
+	<nav class="menubar" aria-label="Main">
+		<span class="main">
+			{
+				items.map((item) => (
+					<a
+						href={item.href}
+						class:list={['item', { active: item.active }]}
+						aria-current={item.active ? 'page' : undefined}
+					>
+						{item.label}
+					</a>
+				))
+			}
+		</span>
+		<span class="extra">
+			<a class="item" href={GITHUB_URL}>GitHub</a>
+			<a class="item" href={link('/rss.xml')}>RSS</a>
+		</span>
 	</nav>
+
+	<div class="toolbar">
+		<button type="button" class="btn tool" data-back hidden>&lt; Back</button>
+		<a class="btn tool" href={home}>Home</a>
+		<span class="label">Address</span>
+		<span class="field address" id="address" title={address}>{address}</span>
+	</div>
 </header>
 
+<script>
+	// Show the real address (matters on the 404 page, which is served from any path).
+	const address = document.getElementById('address');
+	if (address) address.textContent = address.title = location.href;
+
+	const back = document.querySelector<HTMLButtonElement>('[data-back]');
+	if (back) {
+		back.hidden = false;
+		back.addEventListener('click', () => history.back());
+	}
+</script>
+
 <style>
-	header {
+	.titlebar {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 3px 3px 3px 6px;
+		color: #fff;
+		background: var(--title);
+	}
+	.titlebar :global(.tb-icon) {
+		flex-shrink: 0;
+		color: #fff;
+	}
+	.tb-text {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 15px;
+		font-weight: 700;
+	}
+	.tb-btns {
+		display: flex;
+		gap: 2px;
+	}
+	.tb-btns i {
+		position: relative;
+		width: 22px;
+		height: 20px;
+		font-style: normal;
+		font-size: 17px;
+		font-weight: 700;
+		line-height: 18px;
+		text-align: center;
+		color: #000;
+		background: var(--face);
+		box-shadow: var(--raised);
+	}
+	.tb-btns .close {
+		margin-left: 2px;
+	}
+	.tb-btns .min::after,
+	.tb-btns .max::after {
+		content: '';
+		position: absolute;
+		background: #000;
+	}
+	.tb-btns .min::after {
+		left: 6px;
+		bottom: 5px;
+		width: 8px;
+		height: 2px;
+	}
+	.tb-btns .max::after {
+		left: 5px;
+		top: 4px;
+		width: 10px;
+		height: 10px;
+		background: none;
+		border: 1px solid #000;
+		border-top-width: 2px;
+	}
+
+	.menubar {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
 		justify-content: space-between;
-		gap: 20px 24px;
-		padding: 32px 0 28px;
+		gap: 0 12px;
+		padding: 2px 2px;
+		font-size: 14px;
 	}
-	.brand {
-		display: inline-flex;
-		align-items: center;
-		gap: 14px;
-		font-family: var(--pixel);
-		font-size: clamp(0.8rem, 3.6vw, 1rem);
-		color: var(--yellow);
+	.menubar .item {
+		display: inline-block;
+		padding: 3px 12px;
+		color: #000;
 		text-decoration: none;
 	}
-	.brand :global(.brand-sprite) {
-		color: var(--cyan);
-		flex-shrink: 0;
+	.menubar .item:visited {
+		color: #000;
 	}
-	.brand:hover {
-		color: var(--cyan);
+	.menubar .item:hover,
+	.menubar .item:focus-visible {
+		color: #fff;
+		background: var(--navy);
+		outline: none;
 	}
-	.brand:hover :global(.brand-sprite) {
-		color: var(--yellow);
+	.menubar .item.active {
+		font-weight: 700;
+		box-shadow: var(--sunken);
 	}
-	nav {
+	.menubar .item.active:hover {
+		box-shadow: none;
+	}
+
+	.toolbar {
 		display: flex;
-		gap: 14px;
+		align-items: center;
+		gap: 6px;
+		padding: 4px 3px;
+		margin-top: 2px;
+		border-top: 1px solid var(--shadow);
+		box-shadow: 0 -1px 0 var(--hi);
 	}
-	@media (max-width: 520px) {
-		nav {
-			width: 100%;
+	.tool {
+		min-width: 0;
+		padding: 5px 14px;
+	}
+	.tool:active {
+		padding: 6px 13px 4px 15px;
+	}
+	.label {
+		margin-left: 8px;
+		font-size: 14px;
+	}
+	.address {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		padding: 3px 8px;
+	}
+
+	@media (max-width: 640px) {
+		.label {
+			display: none;
 		}
-		nav .btn {
-			flex: 1;
-			text-align: center;
-			padding-inline: 6px;
+		.menubar .item {
+			padding: 5px 10px;
+		}
+		.menubar .extra {
+			display: none;
 		}
 	}
 </style>

@@ -1,0 +1,213 @@
+---
+import { GITHUB_URL, SITE_TITLE } from '../consts';
+import { link } from '../utils';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+const windowTitle = title === SITE_TITLE ? SITE_TITLE : `${title} - ${SITE_TITLE}`;
+---
+
+<div class="taskbar">
+	<details class="start">
+		<summary class="btn start-btn">
+			<span class="flag" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+			<b>Start</b>
+		</summary>
+		<div class="start-menu">
+			<div class="banner" aria-hidden="true"><span>{SITE_TITLE}</span></div>
+			<ul>
+				<li><a href={link('/')}>Home</a></li>
+				<li><a href={link('/blog/')}>Posts</a></li>
+				<li><a href={link('/about/')}>About</a></li>
+				<li class="rule" role="separator"></li>
+				<li><a href={GITHUB_URL}>GitHub</a></li>
+				<li><a href={link('/rss.xml')}>RSS feed</a></li>
+			</ul>
+		</div>
+	</details>
+
+	<span class="sep" aria-hidden="true"></span>
+
+	<span class="btn task is-pressed" aria-hidden="true">{windowTitle}</span>
+
+	<span class="tray" aria-hidden="true"><span id="clock"></span></span>
+</div>
+
+<script>
+	const clock = document.getElementById('clock');
+	const tick = () => {
+		if (clock)
+			clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+	};
+	tick();
+	setInterval(tick, 15000);
+
+	// Close the Start menu when clicking elsewhere or pressing Escape.
+	const start = document.querySelector<HTMLDetailsElement>('details.start');
+	document.addEventListener('click', (e) => {
+		if (start?.open && !start.contains(e.target as Node)) start.open = false;
+	});
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && start?.open) {
+			start.open = false;
+			start.querySelector('summary')?.focus();
+		}
+	});
+</script>
+
+<style>
+	.taskbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 100;
+		height: var(--taskbar);
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 4px 4px;
+		font-size: 14px;
+		background: var(--face);
+		box-shadow: inset 0 1px 0 var(--light), inset 0 2px 0 var(--hi);
+	}
+	.start {
+		position: relative;
+		height: 100%;
+	}
+	.start-btn {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		height: 100%;
+		min-width: 0;
+		padding: 0 12px;
+		list-style: none;
+		user-select: none;
+	}
+	.start-btn::-webkit-details-marker {
+		display: none;
+	}
+	.start[open] > .start-btn {
+		box-shadow: var(--pressed);
+		padding: 1px 11px 0 13px;
+	}
+	.flag {
+		display: grid;
+		grid-template-columns: repeat(2, 7px);
+		gap: 1px;
+	}
+	.flag i {
+		width: 7px;
+		height: 7px;
+	}
+	.flag i:nth-child(1) {
+		background: #e02020;
+	}
+	.flag i:nth-child(2) {
+		background: #20a020;
+	}
+	.flag i:nth-child(3) {
+		background: #2050e0;
+	}
+	.flag i:nth-child(4) {
+		background: #e0c020;
+	}
+
+	.start-menu {
+		position: absolute;
+		left: 0;
+		bottom: calc(100% + 4px);
+		display: flex;
+		min-width: 220px;
+		padding: 3px;
+		background: var(--face);
+		box-shadow: var(--raised), 3px 3px 0 rgba(0, 0, 0, 0.35);
+	}
+	.banner {
+		display: flex;
+		align-items: flex-end;
+		justify-content: flex-start;
+		width: 32px;
+		padding: 8px 0;
+		background: linear-gradient(0deg, #1084d0, #000080);
+	}
+	.banner span {
+		writing-mode: vertical-rl;
+		transform: rotate(180deg);
+		font-size: 18px;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		color: #fff;
+		white-space: nowrap;
+		padding: 0 6px;
+	}
+	.start-menu ul {
+		flex: 1;
+		list-style: none;
+		margin: 0;
+		padding: 2px 0;
+	}
+	.start-menu a {
+		display: block;
+		padding: 9px 28px 9px 16px;
+		color: #000;
+		text-decoration: none;
+	}
+	.start-menu a:visited {
+		color: #000;
+	}
+	.start-menu a:hover,
+	.start-menu a:focus-visible {
+		color: #fff;
+		background: var(--navy);
+		outline: none;
+	}
+	.rule {
+		height: 0;
+		margin: 3px 2px;
+		border-top: 1px solid var(--shadow);
+		border-bottom: 1px solid var(--hi);
+	}
+
+	.sep {
+		align-self: stretch;
+		width: 2px;
+		margin: 2px 2px;
+		box-shadow: inset 1px 0 0 var(--shadow), inset -1px 0 0 var(--hi);
+	}
+	.task {
+		flex: 0 1 220px;
+		min-width: 0;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		padding: 0 10px;
+		overflow: hidden;
+		white-space: nowrap;
+		font-weight: 700;
+		cursor: default;
+		background:
+			repeating-conic-gradient(var(--hi) 0% 25%, var(--face) 0% 50%) 0 0 / 2px 2px;
+	}
+	.task.is-pressed {
+		padding: 0 10px;
+	}
+	.tray {
+		margin-left: auto;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		padding: 0 12px;
+		box-shadow: inset 1px 1px 0 var(--shadow), inset -1px -1px 0 var(--hi);
+	}
+	@media (max-width: 420px) {
+		.task {
+			display: none;
+		}
+	}
+</style>

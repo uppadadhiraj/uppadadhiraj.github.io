@@ -1,6 +1,4 @@
 ---
-import '@fontsource/press-start-2p';
-import '@fontsource/vt323';
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import { SITE_TITLE } from '../consts';
@@ -19,8 +17,8 @@ const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="theme-color" content="#140c2b" />
-<link rel="icon" type="image/svg+xml" href={link('/favicon.svg')} />
+<meta name="theme-color" content="#008080" />
+<link rel="icon" type="image/svg+xml" href={link('/favicon-90s.svg')} />
 <link rel="sitemap" href={link('/sitemap-index.xml')} />
 <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={link('/rss.xml')} />
 <link rel="canonical" href={canonicalURL} />

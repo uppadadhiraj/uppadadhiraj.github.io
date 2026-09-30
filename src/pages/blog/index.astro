@@ -18,17 +18,20 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags.map((t) => t.toLowe
 ---
 
 <Base title="Posts" description="Every post on this blog, newest first.">
-	<h1>Post archive</h1>
+	<h1>Posts</h1>
 	<p class="muted intro">{posts.length} {posts.length === 1 ? 'post' : 'posts'}, newest first.</p>
 
 	<!-- Search and tag filters only work with JavaScript, so they stay hidden without it -->
-	<div class="controls px" data-controls hidden>
-		<label class="sr-only" for="q">Search posts</label>
-		<input id="q" type="search" placeholder="Search posts..." autocomplete="off" />
+	<fieldset class="group find" data-controls hidden>
+		<legend>Find</legend>
+		<div class="row">
+			<label for="q">Search:</label>
+			<input id="q" class="field" type="search" autocomplete="off" />
+		</div>
 		{
 			allTags.length > 0 && (
 				<div class="chips" role="group" aria-label="Filter by tag">
-					<button type="button" class="chip btn is-current" data-tag="" aria-pressed="true">
+					<button type="button" class="chip btn is-pressed" data-tag="" aria-pressed="true">
 						All
 					</button>
 					{allTags.map((t) => (
@@ -40,9 +43,9 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags.map((t) => t.toLowe
 			)
 		}
 		<p class="status" id="status" aria-live="polite"></p>
-	</div>
+	</fieldset>
 
-	<p class="empty px" id="empty" hidden>No posts match. Try another word.</p>
+	<p class="empty" id="empty" hidden>No posts match your search.</p>
 
 	{
 		groups.map((g) => (
@@ -88,7 +91,7 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags.map((t) => t.toLowe
 				tag = chip.dataset.tag ?? '';
 				for (const c of chips) {
 					const on = c === chip;
-					c.classList.toggle('is-current', on);
+					c.classList.toggle('is-pressed', on);
 					c.setAttribute('aria-pressed', String(on));
 				}
 				apply();
@@ -99,57 +102,65 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags.map((t) => t.toLowe
 
 <style>
 	.intro {
-		margin-bottom: 28px;
+		margin-bottom: 24px;
 	}
-	.controls {
+	.find {
 		display: flex;
 		flex-direction: column;
-		gap: 18px;
-		padding: 18px;
-		margin-bottom: 40px;
+		gap: 14px;
+		margin-bottom: 36px;
+		padding: 12px 16px 14px;
+	}
+	.find legend {
+		padding: 0 6px;
+		font-size: 14px;
+	}
+	.find[hidden] {
+		display: none;
+	}
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 14px;
 	}
 	input {
-		width: 100%;
-		font: inherit;
-		font-size: 1.4rem;
-		color: var(--text);
-		background: var(--ink);
-		border: 0;
-		padding: 10px 14px;
-		box-shadow:
-			0 -2px 0 0 var(--line-dim),
-			0 2px 0 0 var(--line-dim),
-			-2px 0 0 0 var(--line-dim),
-			2px 0 0 0 var(--line-dim);
-	}
-	input::placeholder {
-		color: var(--muted);
+		flex: 1;
+		min-width: 0;
+		font-size: 16px;
 	}
 	.chips {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 16px;
+		gap: 8px;
 	}
 	.chip {
-		font-size: 0.6rem;
-		padding: 9px 11px;
+		min-width: 0;
+		padding: 4px 14px;
+		font-size: 13px;
+	}
+	.chip.is-pressed {
+		padding: 5px 13px 3px 15px;
+	}
+	.status:empty {
+		display: none;
 	}
 	.status {
 		margin: 0;
-		min-height: 1.45em;
-		font-family: var(--pixel);
-		font-size: 0.55rem;
+		font-size: 13px;
 		color: var(--muted);
 	}
 	.empty {
-		padding: 18px 20px;
-		margin-bottom: 40px;
-		color: var(--yellow);
+		margin: 0 0 36px;
+		padding: 10px 14px;
+		background: var(--note);
+		border: 1px solid #000;
 	}
 	.month {
-		margin-bottom: 44px;
+		margin-bottom: 36px;
 	}
 	.month h2 {
 		margin-top: 0;
+		margin-bottom: 14px;
 	}
 </style>
