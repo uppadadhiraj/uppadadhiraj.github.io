@@ -1,0 +1,77 @@
+---
+import { link } from '../utils';
+---
+
+<div class="taskbar">
+	<a class="start" href={link('/')}><span aria-hidden="true">⊞</span> Start</a>
+	<span class="sep" aria-hidden="true"></span>
+	<a class="task" href={link('/blog/')}>📁 Posts</a>
+	<span class="clock" id="clock" aria-hidden="true"></span>
+</div>
+
+<script>
+	const clock = document.getElementById('clock');
+	const tick = () => {
+		if (clock)
+			clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+	};
+	tick();
+	setInterval(tick, 15000);
+</script>
+
+<style>
+	.taskbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 10;
+		height: 36px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 3px 4px;
+		background: var(--face);
+		box-shadow: inset 0 2px 0 var(--hi);
+		font-size: 0.9rem;
+	}
+	.start,
+	.task {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		height: 100%;
+		padding: 0 12px;
+		color: #000;
+		text-decoration: none;
+		box-shadow: var(--raised);
+	}
+	.start {
+		font-weight: 700;
+	}
+	.start:visited,
+	.task:visited,
+	.start:hover,
+	.task:hover {
+		color: #000;
+	}
+	.start:active,
+	.task:active {
+		box-shadow: var(--sunken);
+	}
+	.sep {
+		width: 2px;
+		height: 70%;
+		box-shadow: inset 1px 0 0 var(--border), inset -1px 0 0 var(--hi);
+	}
+	.clock {
+		margin-left: auto;
+		padding: 2px 12px;
+		box-shadow: var(--sunken);
+	}
+	@media (max-width: 400px) {
+		.task {
+			display: none;
+		}
+	}
+</style>

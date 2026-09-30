@@ -14,7 +14,7 @@ const { posts } = Astro.props;
 		<p class="muted">No posts yet.</p>
 	) : (
 		<ul class="posts">
-			{posts.map((post) => (
+			{posts.map((post, i) => (
 				<li>
 					<a class="card" href={link(`/blog/${post.id}/`)}>
 						<span class="ico" aria-hidden="true">📄</span>
@@ -23,6 +23,7 @@ const { posts } = Astro.props;
 							<strong>
 								{post.data.title}
 								{post.data.draft && <span class="draft">DRAFT</span>}
+								{i === 0 && <span class="new blink">NEW!</span>}
 							</strong>
 							<span class="desc">{post.data.description}</span>
 						</span>
@@ -82,6 +83,13 @@ const { posts } = Astro.props;
 	}
 	.desc {
 		color: var(--muted);
+	}
+	.new {
+		margin-left: 8px;
+		font-family: var(--pixel);
+		font-size: 0.6rem;
+		color: #f00;
+		vertical-align: middle;
 	}
 	.draft {
 		margin-left: 8px;

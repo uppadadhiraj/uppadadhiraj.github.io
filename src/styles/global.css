@@ -17,6 +17,7 @@
 	--hi: #ffffff;          /* bevel highlight */
 	--shadow: #404040;      /* bevel shadow */
 
+	--pixel: 'Press Start 2P', 'Courier New', monospace;
 	--font: Tahoma, Verdana, 'MS Sans Serif', Geneva, sans-serif;
 	--mono: 'Courier New', Courier, monospace;
 	--width: 720px;
@@ -40,10 +41,16 @@ html {
 	background: var(--desktop);
 }
 
+/* dithered desktop pattern */
 body {
 	margin: 0;
 	min-height: 100vh;
-	background: var(--desktop);
+	padding-bottom: 40px; /* room for the taskbar */
+	background-color: var(--desktop);
+	background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.12) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.12) 75%),
+		linear-gradient(45deg, rgba(0, 0, 0, 0.12) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.12) 75%);
+	background-size: 4px 4px;
+	background-position: 0 0, 2px 2px;
 	color: var(--text);
 	font-family: var(--font);
 	font-size: 16px;
@@ -86,18 +93,39 @@ h4 {
 	line-height: 1.25;
 	margin: 1.6em 0 0.5em;
 }
+h1,
+h2 {
+	font-family: var(--pixel);
+	font-weight: normal;
+	line-height: 1.5;
+}
 h1 {
-	font-size: 1.9rem;
+	font-size: 1.35rem;
 	margin-top: 0;
 	color: var(--accent);
+	text-shadow: 2px 2px 0 #c0c0c0;
 }
 h2 {
-	font-size: 1.4rem;
-	padding-bottom: 4px;
-	border-bottom: 2px solid var(--border);
+	font-size: 1rem;
+	padding-bottom: 8px;
+	border-bottom: 4px double var(--border);
 }
 h3 {
 	font-size: 1.15rem;
+}
+
+.blink {
+	animation: blink 1s steps(1) infinite;
+}
+@keyframes blink {
+	50% {
+		visibility: hidden;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.blink {
+		animation: none;
+	}
 }
 
 p {
@@ -121,8 +149,9 @@ button:focus-visible {
 
 hr {
 	border: none;
-	border-top: 2px groove var(--face);
+	height: 4px;
 	margin: 2em 0;
+	background: linear-gradient(90deg, #f00, #f80, #ff0, #0c0, #08f, #80f);
 }
 
 .muted {
@@ -229,6 +258,9 @@ img {
 		padding: 20px 16px 32px;
 	}
 	h1 {
-		font-size: 1.55rem;
+		font-size: 1.05rem;
+	}
+	h2 {
+		font-size: 0.85rem;
 	}
 }
