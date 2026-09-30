@@ -3,54 +3,33 @@ import PostList from '../components/PostList.astro';
 import Sprite from '../components/Sprite.astro';
 import Base from '../layouts/Base.astro';
 import { AUTHOR, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { HEART, INVADER } from '../sprites';
+import { MONITOR } from '../sprites';
 import { getPosts, isoDate, link } from '../utils';
 
 const posts = await getPosts();
 const latest = posts.slice(0, 5);
-
-// Every 10 posts = 1 level.
-const level = Math.floor(posts.length / 10) + 1;
-const xp = posts.length % 10;
 ---
 
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<section class="hero px">
-		<div class="art" aria-hidden="true">
-			<Sprite art={INVADER} size={8} class="invader" />
-			<span class="lives">
-				<Sprite art={HEART} size={3} />
-				<Sprite art={HEART} size={3} />
-				<Sprite art={HEART} size={3} />
-			</span>
-		</div>
+		<Sprite art={MONITOR} size={8} class="art" />
 		<div class="text">
-			<p class="kicker">PLAYER 1 READY<span class="blink">_</span></p>
 			<h1>Hi, I'm {AUTHOR}!</h1>
 			<p class="lead">{SITE_DESCRIPTION}</p>
+			{
+				posts[0] && (
+					<p class="stats">
+						{posts.length} {posts.length === 1 ? 'post' : 'posts'} &middot; last updated{' '}
+						{isoDate(posts[0].data.pubDate)}
+					</p>
+				)
+			}
 			<p class="actions">
 				<a class="btn is-primary" href={link('/blog/')}>Read posts</a>
 				<a class="btn" href={link('/about/')}>About me</a>
 			</p>
 		</div>
 	</section>
-
-	<ul class="hud">
-		<li class="px">
-			<span class="k">Posts</span>
-			<span class="v">{String(posts.length).padStart(3, '0')}</span>
-		</li>
-		<li class="px">
-			<span class="k">Last update</span>
-			<span class="v">{posts[0] ? isoDate(posts[0].data.pubDate) : '---'}</span>
-		</li>
-		<li class="px">
-			<span class="k">Level {String(level).padStart(2, '0')}</span>
-			<span class="xp" role="img" aria-label={`${xp} of 10 posts to the next level`}>
-				{Array.from({ length: 10 }, (_, i) => <span class:list={['cell', { on: i < xp }]} />)}
-			</span>
-		</li>
-	</ul>
 
 	<h2>Latest posts</h2>
 	<PostList posts={latest} markNewest />
@@ -67,37 +46,13 @@ const xp = posts.length % 10;
 	.hero {
 		display: grid;
 		grid-template-columns: auto minmax(0, 1fr);
-		gap: 32px;
+		gap: 36px;
 		align-items: center;
-		padding: 32px;
-		margin-bottom: 36px;
+		padding: 32px 36px;
+		margin-bottom: 44px;
 	}
-	.art {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 18px;
-		padding: 0 8px;
-	}
-	.art :global(.invader) {
-		color: var(--green);
-		animation: bob 1s steps(1) infinite;
-	}
-	.lives {
-		display: flex;
-		gap: 6px;
-		color: var(--pink);
-	}
-	@keyframes bob {
-		50% {
-			transform: translateY(8px);
-		}
-	}
-	.kicker {
-		margin: 0 0 16px;
-		font-family: var(--pixel);
-		font-size: 0.6rem;
-		color: var(--pink);
+	.hero :global(.art) {
+		color: var(--cyan);
 	}
 	h1 {
 		margin-bottom: 14px;
@@ -105,7 +60,12 @@ const xp = posts.length % 10;
 	.lead {
 		font-size: 1.5rem;
 		color: var(--muted);
-		margin-bottom: 22px;
+		margin-bottom: 8px;
+	}
+	.stats {
+		margin-bottom: 24px;
+		color: var(--muted);
+		font-size: 1.15rem;
 	}
 	.actions {
 		display: flex;
@@ -113,45 +73,6 @@ const xp = posts.length % 10;
 		gap: 18px;
 		margin: 0;
 	}
-
-	.hud {
-		list-style: none;
-		margin: 0 0 40px;
-		padding: 0;
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 24px;
-	}
-	.hud li {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		padding: 14px 16px;
-	}
-	.k {
-		font-family: var(--pixel);
-		font-size: 0.55rem;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-	.v {
-		font-family: var(--pixel);
-		font-size: 0.95rem;
-		color: var(--yellow);
-	}
-	.xp {
-		display: flex;
-		gap: 3px;
-		height: 20px;
-	}
-	.cell {
-		flex: 1;
-		background: var(--ink);
-	}
-	.cell.on {
-		background: var(--green);
-	}
-
 	h2 {
 		margin-top: 0;
 	}
@@ -163,29 +84,12 @@ const xp = posts.length % 10;
 		.hero {
 			grid-template-columns: minmax(0, 1fr);
 			padding: 24px 20px;
-			gap: 24px;
+			gap: 22px;
 			justify-items: start;
 		}
-		.art {
-			flex-direction: row;
-			padding: 0;
-			gap: 20px;
-		}
-		.art :global(.invader) {
-			width: 66px;
-			height: 48px;
-		}
-		.hud {
-			grid-template-columns: minmax(0, 1fr);
-			gap: 20px;
-		}
-		.hud li {
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
-		}
-		.xp {
-			width: 140px;
+		.hero :global(.art) {
+			width: 78px;
+			height: 66px;
 		}
 	}
 </style>

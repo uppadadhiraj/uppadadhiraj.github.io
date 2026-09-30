@@ -4,7 +4,7 @@ import { dateParts, link } from '../utils';
 
 interface Props {
 	posts: CollectionEntry<'blog'>[];
-	/** Show a blinking NEW! badge on the first post (used on the home page). */
+	/** Show a NEW badge on the first post (used on the home page). */
 	markNewest?: boolean;
 }
 
@@ -32,7 +32,7 @@ const { posts, markNewest = false } = Astro.props;
 							<span class="title">
 								{title}
 								{draft && <span class="badge">DRAFT</span>}
-								{markNewest && i === 0 && <span class="badge new blink">NEW!</span>}
+								{markNewest && i === 0 && <span class="badge new">New</span>}
 							</span>
 							<span class="desc">{description}</span>
 							{tags.length > 0 && (
@@ -91,7 +91,7 @@ const { posts, markNewest = false } = Astro.props;
 	}
 	.mon {
 		font-size: 0.6rem;
-		color: var(--pink);
+		color: var(--cyan);
 	}
 	.day {
 		font-size: 1.3rem;
@@ -138,7 +138,7 @@ const { posts, markNewest = false } = Astro.props;
 		color: var(--text);
 	}
 	.badge.new {
-		background: var(--pink);
+		background: var(--yellow);
 		color: var(--ink);
 	}
 	@media (max-width: 520px) {

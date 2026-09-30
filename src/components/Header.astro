@@ -1,7 +1,7 @@
 ---
 import Sprite from './Sprite.astro';
 import { SITE_TITLE } from '../consts';
-import { INVADER } from '../sprites';
+import { MONITOR } from '../sprites';
 import { link } from '../utils';
 
 const path = Astro.url.pathname;
@@ -15,7 +15,7 @@ const items = [
 
 <header>
 	<a class="brand" href={home} aria-label={`${SITE_TITLE}, home`}>
-		<Sprite art={INVADER} size={4} class="brand-sprite" />
+		<Sprite art={MONITOR} size={3} class="brand-sprite" />
 		<span>{SITE_TITLE}</span>
 	</a>
 	<nav aria-label="Main">
@@ -52,14 +52,14 @@ const items = [
 		text-decoration: none;
 	}
 	.brand :global(.brand-sprite) {
-		color: var(--green);
+		color: var(--cyan);
 		flex-shrink: 0;
 	}
 	.brand:hover {
 		color: var(--cyan);
 	}
 	.brand:hover :global(.brand-sprite) {
-		color: var(--pink);
+		color: var(--yellow);
 	}
 	nav {
 		display: flex;

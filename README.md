@@ -75,8 +75,8 @@ Open http://localhost:4321. The page reloads as you edit.
 | `src/pages/about.astro` | The About page text |
 | `astro.config.mjs` | The site address (`site:`) |
 
-The look is an 8-bit arcade theme: pixel fonts, notched pixel borders, a starfield background and
-pixel-art sprites (see `src/sprites.ts` to draw your own).
+The look is a retro pixel theme: pixel fonts, notched pixel borders, hard shadows, a faint pixel grid and
+a small pixel-art computer (see `src/sprites.ts` to draw your own).
 
 ## Publishing setup (one time)
 

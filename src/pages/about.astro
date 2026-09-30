@@ -1,30 +1,31 @@
 ---
-import Sprite from '../components/Sprite.astro';
 import Base from '../layouts/Base.astro';
 import { AUTHOR, GITHUB_URL } from '../consts';
-import { CONTROLLER } from '../sprites';
 
 // Edit these lines to describe yourself.
-const stats = [
-	['NAME', AUTHOR],
-	['CLASS', 'BTech student'],
-	['LEARNING', 'Java'],
-	['ALSO USES', 'Python, JavaScript'],
-	['QUEST', 'Post something new every day'],
+const facts = [
+	['Name', AUTHOR],
+	['Role', 'BTech student'],
+	['Learning', 'Java'],
+	['Also uses', 'Python, JavaScript'],
 ];
 ---
 
 <Base title="About" description={`Who is ${AUTHOR}?`}>
 	<h1>About</h1>
 
-	<section class="sheet px">
-		<div class="portrait" aria-hidden="true">
-			<Sprite art={CONTROLLER} size={8} class="pad" />
-			<span class="label">PLAYER 1</span>
+	<section class="card px">
+		<div class="prose">
+			<p>Hi, I'm {AUTHOR}. I'm learning to code, and I write down what I learn as I go.</p>
+			<p>
+				This blog is my progress log: short notes, small programs and the bugs I ran into. If
+				something clicked for me today, it goes here so I can find it again later.
+			</p>
 		</div>
+
 		<dl>
 			{
-				stats.map(([label, value]) => (
+				facts.map(([label, value]) => (
 					<div class="row">
 						<dt>{label}</dt>
 						<dd>{value}</dd>
@@ -32,47 +33,23 @@ const stats = [
 				))
 			}
 		</dl>
-	</section>
 
-	<section class="story px prose">
-		<p>
-			Hi, I'm {AUTHOR}. I'm learning to code, and I write down what I learn as I go.
-		</p>
-		<p>
-			This blog is my progress log: short notes, small programs and the bugs I ran into. If
-			something clicked for me today, it goes here so I can find it again later.
-		</p>
-		<p>Find me on <a href={GITHUB_URL}>GitHub</a>.</p>
+		<p class="find">Find me on <a href={GITHUB_URL}>GitHub</a>.</p>
 	</section>
 </Base>
 
 <style>
-	.sheet {
-		display: grid;
-		grid-template-columns: auto minmax(0, 1fr);
-		gap: 32px;
-		align-items: center;
+	.card {
 		padding: 28px 32px;
-		margin-bottom: 40px;
-	}
-	.portrait {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 16px;
-	}
-	.portrait :global(.pad) {
-		color: var(--cyan);
-	}
-	.label {
-		font-family: var(--pixel);
-		font-size: 0.6rem;
-		color: var(--pink);
 	}
 	dl {
-		margin: 0;
+		margin: 24px 0 24px;
+		padding: 18px 0;
 		display: grid;
-		gap: 14px;
+		gap: 12px;
+		background:
+			repeating-linear-gradient(90deg, var(--line-dim) 0 8px, transparent 8px 16px) top / 100% 4px no-repeat,
+			repeating-linear-gradient(90deg, var(--line-dim) 0 8px, transparent 8px 16px) bottom / 100% 4px no-repeat;
 	}
 	.row {
 		display: grid;
@@ -83,32 +60,21 @@ const stats = [
 	dt {
 		font-family: var(--pixel);
 		font-size: 0.6rem;
+		text-transform: uppercase;
 		color: var(--yellow);
 	}
 	dd {
 		margin: 0;
 	}
-	.story {
-		padding: 28px 32px 12px;
+	.find {
+		margin: 0;
 	}
 	@media (max-width: 640px) {
-		.sheet {
-			grid-template-columns: minmax(0, 1fr);
+		.card {
 			padding: 22px 18px;
-			justify-items: start;
-		}
-		.portrait {
-			flex-direction: row;
-		}
-		.portrait :global(.pad) {
-			width: 78px;
-			height: 45px;
 		}
 		.row {
 			grid-template-columns: minmax(0, 1fr);
-		}
-		.story {
-			padding: 22px 18px 6px;
 		}
 	}
 </style>

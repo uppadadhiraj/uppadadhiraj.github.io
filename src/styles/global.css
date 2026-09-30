@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════════════════════
-   8-BIT ARCADE THEME
+   RETRO PIXEL THEME
    Pixel fonts, square corners with notched edges, hard pixel
-   shadows, a starfield background and stepped animations.
+   shadows and a faint pixel-grid background.
    Colours and fonts live in :root, change them there.
    ════════════════════════════════════════════════════════════ */
 
@@ -15,7 +15,6 @@
 	--muted: #b0a6dc;
 	--yellow: #ffd23f;
 	--cyan: #3ee6e6;
-	--pink: #ff5fa2;
 	--green: #5cff7a;
 	--ink: #140c2b;          /* dark text used on bright buttons */
 	--shadow: rgba(0, 0, 0, 0.45);
@@ -47,9 +46,9 @@ body {
 	line-height: 1.45;
 	overflow-wrap: break-word;
 	background-color: var(--bg);
-	/* a tiled starfield: tiny crisp squares */
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' shape-rendering='crispEdges'%3E%3Cg fill='%23ffffff' opacity='.55'%3E%3Crect x='22' y='34' width='2' height='2'/%3E%3Crect x='96' y='12' width='2' height='2'/%3E%3Crect x='170' y='70' width='2' height='2'/%3E%3Crect x='236' y='28' width='2' height='2'/%3E%3Crect x='60' y='120' width='2' height='2'/%3E%3Crect x='140' y='150' width='2' height='2'/%3E%3Crect x='214' y='134' width='2' height='2'/%3E%3Crect x='30' y='210' width='2' height='2'/%3E%3Crect x='110' y='226' width='2' height='2'/%3E%3Crect x='190' y='214' width='2' height='2'/%3E%3C/g%3E%3Cg opacity='.8'%3E%3Crect x='70' y='60' width='4' height='4' fill='%233ee6e6'/%3E%3Crect x='200' y='100' width='4' height='4' fill='%23ff5fa2'/%3E%3Crect x='130' y='190' width='4' height='4' fill='%23ffd23f'/%3E%3Crect x='10' y='150' width='4' height='4' fill='%235cff7a'/%3E%3C/g%3E%3C/svg%3E");
-	background-size: 260px 260px;
+	/* faint pixel grid: one tiny square per tile */
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' shape-rendering='crispEdges'%3E%3Crect width='2' height='2' fill='%23ffffff' opacity='.09'/%3E%3C/svg%3E");
+	background-size: 32px 32px;
 	image-rendering: pixelated;
 }
 
@@ -137,17 +136,14 @@ main {
 	background: var(--yellow);
 	color: var(--ink);
 }
-.btn.is-current::before {
-	content: '> ';
-}
 .btn.is-primary {
-	--c: var(--green);
-	background: var(--green);
+	--c: var(--yellow);
+	background: var(--yellow);
 	color: var(--ink);
 }
 .btn.is-primary:hover {
-	--c: var(--yellow);
-	background: var(--yellow);
+	--c: var(--cyan);
+	background: var(--cyan);
 }
 
 .tag {
@@ -164,15 +160,6 @@ main {
 		0 2px 0 0 var(--line-dim),
 		-2px 0 0 0 var(--line-dim),
 		2px 0 0 0 var(--line-dim);
-}
-
-.blink {
-	animation: blink 1s steps(1) infinite;
-}
-@keyframes blink {
-	50% {
-		visibility: hidden;
-	}
 }
 
 .sr-only {
@@ -207,11 +194,11 @@ h1 {
 }
 h2 {
 	font-size: clamp(0.8rem, 3.4vw, 1rem);
-	color: var(--pink);
+	color: var(--cyan);
 }
 h3 {
 	font-size: 0.85rem;
-	color: var(--cyan);
+	color: var(--text);
 }
 h4 {
 	font-size: 0.75rem;
@@ -258,10 +245,6 @@ img {
 .prose > :last-child {
 	margin-bottom: 0;
 }
-.prose h2::before {
-	content: '> ';
-	color: var(--yellow);
-}
 .prose a {
 	overflow-wrap: anywhere;
 }
@@ -281,7 +264,7 @@ img {
 	top: 0.5em;
 	width: 8px;
 	height: 8px;
-	background: var(--pink);
+	background: var(--yellow);
 }
 .prose ol {
 	padding-left: 1.8em;
@@ -424,7 +407,6 @@ pre code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.blink,
 	* {
 		animation: none !important;
 	}
