@@ -17,12 +17,15 @@ const { posts } = Astro.props;
 			{posts.map((post) => (
 				<li>
 					<a class="card" href={link(`/blog/${post.id}/`)}>
-						<time datetime={post.data.pubDate.toISOString()}>{isoDate(post.data.pubDate)}</time>
-						<h3>
-							{post.data.title}
-							{post.data.draft && <span class="draft">Draft</span>}
-						</h3>
-						<p>{post.data.description}</p>
+						<span class="ico" aria-hidden="true">📄</span>
+						<span class="body">
+							<time datetime={post.data.pubDate.toISOString()}>{isoDate(post.data.pubDate)}</time>
+							<strong>
+								{post.data.title}
+								{post.data.draft && <span class="draft">DRAFT</span>}
+							</strong>
+							<span class="desc">{post.data.description}</span>
+						</span>
 					</a>
 				</li>
 			))}
@@ -36,43 +39,56 @@ const { posts } = Astro.props;
 		margin: 0;
 		padding: 0;
 		display: grid;
-		gap: 16px;
+		gap: 12px;
 	}
 	.card {
-		display: block;
-		padding: 18px 22px;
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: 12px;
-		color: var(--text);
+		display: flex;
+		gap: 14px;
+		align-items: flex-start;
+		padding: 12px 16px;
+		background: var(--face);
+		box-shadow: var(--raised);
+		color: #000;
 		text-decoration: none;
-		transition: border-color 0.15s;
+	}
+	.card:visited {
+		color: #000;
 	}
 	.card:hover {
-		border-color: var(--accent);
+		background: var(--accent-soft);
+	}
+	.card:hover strong {
+		color: var(--accent);
+		text-decoration: underline;
+	}
+	.card:active {
+		box-shadow: var(--sunken);
+	}
+	.ico {
+		font-size: 1.6rem;
+		line-height: 1.2;
+	}
+	.body {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
 	}
 	time {
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		color: var(--muted);
 	}
-	h3 {
-		margin: 2px 0 4px;
-		font-size: 1.2rem;
+	strong {
+		font-size: 1.1rem;
 	}
-	.card:hover h3 {
-		color: var(--accent);
-	}
-	p {
-		margin: 0;
+	.desc {
 		color: var(--muted);
 	}
 	.draft {
 		margin-left: 8px;
-		padding: 1px 8px;
-		font-size: 0.75rem;
-		border-radius: 999px;
-		background: var(--accent-soft);
-		color: var(--accent);
+		padding: 0 6px;
+		font-size: 0.7rem;
+		background: #000080;
+		color: #fff;
 		vertical-align: middle;
 	}
 </style>

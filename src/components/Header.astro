@@ -12,7 +12,10 @@ const items = [
 ---
 
 <header>
-	<a class="site-title" href={home}>{SITE_TITLE}</a>
+	<div class="titlebar">
+		<a class="site-title" href={home}>{SITE_TITLE}</a>
+		<span class="wbtns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+	</div>
 	<nav aria-label="Main">
 		{
 			items.map((item) => (
@@ -29,37 +32,60 @@ const items = [
 </header>
 
 <style>
-	header {
+	.titlebar {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
-		gap: 8px 24px;
-		padding: 24px 0;
-		border-bottom: 1px solid var(--border);
+		gap: 12px;
+		padding: 3px 4px 3px 8px;
+		background: linear-gradient(90deg, #000080, #1084d0);
 	}
 	.site-title {
-		font-size: 1.25rem;
+		color: #fff;
 		font-weight: 700;
-		color: var(--text);
+		font-size: 1rem;
 		text-decoration: none;
+		letter-spacing: 0.04em;
+	}
+	.site-title:visited,
+	.site-title:hover {
+		color: #fff;
+	}
+	.wbtns {
+		display: flex;
+		gap: 2px;
+	}
+	.wbtns i {
+		width: 18px;
+		height: 16px;
+		display: grid;
+		place-items: center;
+		font: 700 12px/1 var(--font);
+		font-style: normal;
+		color: #000;
+		background: var(--face);
+		box-shadow: var(--raised);
 	}
 	nav {
 		display: flex;
-		gap: 4px;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 6px 2px;
 	}
 	.nav-link {
-		color: var(--muted);
+		padding: 3px 18px;
+		color: #000;
 		text-decoration: none;
-		padding: 4px 12px;
-		border-radius: 999px;
+		background: var(--face);
+		box-shadow: var(--raised);
 	}
+	.nav-link:visited,
 	.nav-link:hover {
-		color: var(--text);
+		color: #000;
 	}
+	.nav-link:active,
 	.nav-link.active {
-		background: var(--accent-soft);
-		color: var(--accent);
-		font-weight: 600;
+		box-shadow: var(--sunken);
+		font-weight: 700;
 	}
 </style>

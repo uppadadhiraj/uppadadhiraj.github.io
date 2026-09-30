@@ -6,8 +6,8 @@ const year = new Date().getFullYear();
 ---
 
 <footer>
-	<span>© {year} {AUTHOR}</span>
-	<span class="links">
+	<span class="cell">© {year} {AUTHOR}</span>
+	<span class="cell links">
 		<a href={GITHUB_URL}>GitHub</a>
 		<a href={link('/rss.xml')}>RSS</a>
 	</span>
@@ -16,22 +16,24 @@ const year = new Date().getFullYear();
 <style>
 	footer {
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: 8px 16px;
-		padding: 24px 0 32px;
-		border-top: 1px solid var(--border);
-		color: var(--muted);
-		font-size: 0.9rem;
+		gap: 4px;
+		font-size: 0.85rem;
+	}
+	.cell {
+		padding: 2px 10px;
+		box-shadow: var(--sunken);
+	}
+	.cell:first-child {
+		flex: 1;
 	}
 	.links {
 		display: flex;
-		gap: 16px;
+		gap: 14px;
 	}
 	.links a {
-		color: var(--muted);
+		color: #000;
 	}
 	.links a:hover {
-		color: var(--accent);
+		color: #f00;
 	}
 </style>

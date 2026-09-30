@@ -66,7 +66,7 @@ Open http://localhost:4321. The page reloads as you edit.
 | `src/pages/about.astro` | The About page text |
 | `astro.config.mjs` | The site address (`site:`) |
 
-Colours switch between light and dark automatically, following the visitor's device setting.
+The look is a 90s Windows-style desktop: teal background, grey beveled windows and navy title bars.
 
 ## Publishing setup (one time)
 
