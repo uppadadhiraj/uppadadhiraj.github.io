@@ -1,7 +1,7 @@
 ---
 title: 'worked on ScoutLens project'
 description: 'the project which when given the link of a job will go online using the SerpApi key will do google search and give full detailed information about that job and compaire it to the resume you upload!'
-pubDate: '2026-09-29'
+pubDate: '2026-10-01'
 ---
 
 ### Text 
