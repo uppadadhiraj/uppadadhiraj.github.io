@@ -10,7 +10,7 @@ import { defineConfig } from 'astro/config';
 //  and set it to '/blog' (the repo name).
 // ─────────────────────────────────────────────────────────────
 export default defineConfig({
-	site: 'https://github.com/uppadadhiraj',
+	site: 'https://uppadadhiraj.github.io',
 	// base: '/blog',
 
 	integrations: [sitemap()],
