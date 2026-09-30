@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import { AUTHOR, GITHUB_URL, HOSTNAME, PROMPT } from '../consts';
+
+// ── Edit these lines to describe yourself ──
+const info = [
+	['ROLE', '4th-year BTech student'],
+	['STACK', 'Python, Java (learning), JavaScript'],
+	['BUILDING', 'a browser OS, a Pi vision rig, an XAI model'],
+	['WRITES', 'build logs, bug hunts, things I learn'],
+	['CONTACT', GITHUB_URL.replace(/^https?:\/\//, '')],
+];
+
+const logo = String.raw`  .--------------.
+  | .----------. |
+  | |  >_      | |
+  | |          | |
+  | |          | |
+  | '----------' |
+  '-----.  .-----'
+   _____|__|_____
+  |______________|`;
+---
+
+<Base title="About" description={`Who is ${AUTHOR}?`}>
+	<p class="line"><span class="prompt">{PROMPT}</span> <span class="cmd">neofetch</span></p>
+
+	<div class="fetch">
+		<pre class="logo" aria-hidden="true">{logo}</pre>
+		<div class="info">
+			<p class="line">{AUTHOR}@{HOSTNAME}</p>
+			<p class="line dim">{'-'.repeat(`${AUTHOR}@${HOSTNAME}`.length)}</p>
+			<dl>
+				{
+					info.map(([label, value]) => (
+						<div class="row">
+							<dt>{label}</dt>
+							<dd>{value}</dd>
+						</div>
+					))
+				}
+			</dl>
+			<p class="swatches" aria-hidden="true">
+				<span style="background: var(--ph)"></span><span style="background: var(--ph-dim)"
+				></span><span style="background: var(--ph-faint)"></span>
+			</p>
+		</div>
+	</div>
+
+	<p class="line"><span class="prompt">{PROMPT}</span> <span class="cmd">cat about.txt</span></p>
+	<div class="prose">
+		<p>
+			Hi, I'm {AUTHOR}. I'm a final-year engineering student and I like building things that
+			probably shouldn't run on the hardware I give them.
+		</p>
+		<p>
+			This blog is where I write up my projects: what I tried, what broke, and how I fixed it.
+			Expect build logs, bug postmortems, and notes from whatever I'm learning right now.
+		</p>
+		<p>
+			Want to say hi? Find me on <a href={GITHUB_URL}>GitHub</a>.
+		</p>
+	</div>
+
+	<p class="line"><span class="prompt">{PROMPT}</span> <span class="cursor"></span></p>
+</Base>
+
+<style>
+	.fetch {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 4ch;
+		align-items: flex-start;
+		margin: 12px 0 24px;
+	}
+	.logo {
+		margin: 0;
+		padding: 0;
+		border: none;
+		line-height: 1.05;
+		overflow: visible;
+	}
+	.info {
+		flex: 1;
+		min-width: min(100%, 30ch);
+	}
+	dl {
+		margin: 4px 0 10px;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 10ch minmax(0, 1fr);
+		column-gap: 1ch;
+	}
+	dt {
+		color: var(--ph-dim);
+	}
+	dt::after {
+		content: ':';
+	}
+	dd {
+		margin: 0;
+	}
+	.swatches {
+		display: flex;
+		margin: 0;
+	}
+	.swatches span {
+		width: 3ch;
+		height: 1em;
+		display: inline-block;
+	}
+	@media (max-width: 640px) {
+		.logo {
+			font-size: 0.8em;
+		}
+	}
+</style>

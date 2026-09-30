@@ -1,0 +1,74 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { fileSize, isoDate, link } from '../utils';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+	posts.length === 0 ? (
+		<p class="dim">ls: posts/: directory is empty</p>
+	) : (
+		<ul class="ls">
+			{posts.map((post) => (
+				<li>
+					<span class="perm dim" aria-hidden="true">-rw-r--r--</span>
+					<time class="date" datetime={post.data.pubDate.toISOString()}>
+						{isoDate(post.data.pubDate)}
+					</time>
+					<span class="size dim" aria-hidden="true">{fileSize(post.body)}</span>
+					<span class="name">
+						<a href={link(`/blog/${post.id}/`)}>{post.data.title}</a>
+						{post.data.draft && <span class="draft">[DRAFT]</span>}
+					</span>
+					<span class="desc dim">{post.data.description}</span>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+<style>
+	.ls {
+		list-style: none;
+		margin: 0.4em 0 1.2em;
+		padding: 0;
+	}
+	.ls li {
+		display: grid;
+		grid-template-columns: 10ch 10ch 5ch minmax(0, 1fr);
+		column-gap: 2ch;
+		padding: 6px 0;
+		border-bottom: 1px dotted var(--ph-faint);
+	}
+	.size {
+		text-align: right;
+	}
+	.desc {
+		grid-column: 4;
+	}
+	.draft {
+		margin-left: 1ch;
+		color: var(--ph-dim);
+	}
+	@media (max-width: 640px) {
+		.ls li {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.perm,
+		.size {
+			display: none;
+		}
+		.date {
+			color: var(--ph-dim);
+			font-size: 0.9em;
+		}
+		.desc {
+			grid-column: 1;
+		}
+	}
+</style>

@@ -1,0 +1,98 @@
+---
+import { AUTHOR, GITHUB_URL } from '../consts';
+import { link } from '../utils';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+	<div class="status-bar">
+		<span>(C) {year} {AUTHOR.toUpperCase()}</span>
+		<span class="actions">
+			<a href={GITHUB_URL}>GITHUB</a>
+			<a href={link('/rss.xml')}>RSS</a>
+			<button type="button" class="phosphor-toggle" data-key="t" aria-label="Switch screen colour">
+				PHOSPHOR: <span class="phosphor-name">GREEN</span>
+			</button>
+		</span>
+	</div>
+	<p class="keys dim">KEYS: [1] HOME &nbsp;[2] POSTS &nbsp;[3] ABOUT &nbsp;[T] PHOSPHOR</p>
+</footer>
+
+<script>
+	const root = document.documentElement;
+	const label = document.querySelector('.phosphor-name');
+	const sync = () => {
+		if (label) label.textContent = root.dataset.phosphor === 'amber' ? 'AMBER' : 'GREEN';
+	};
+	const toggle = () => {
+		if (root.dataset.phosphor === 'amber') delete root.dataset.phosphor;
+		else root.dataset.phosphor = 'amber';
+		try {
+			localStorage.setItem('phosphor', root.dataset.phosphor ?? 'green');
+		} catch {}
+		sync();
+	};
+	sync();
+	document.querySelector('.phosphor-toggle')?.addEventListener('click', toggle);
+
+	// Keyboard shortcuts: 1/2/3 to navigate, T to switch phosphor colour
+	document.addEventListener('keydown', (e) => {
+		if (e.ctrlKey || e.metaKey || e.altKey) return;
+		const target = e.target as HTMLElement | null;
+		if (target?.closest('input, textarea, select, [contenteditable]')) return;
+		const key = e.key.toLowerCase();
+		if (key === 't') return toggle();
+		const nav = document.querySelector<HTMLAnchorElement>(`a[data-key="${key}"]`);
+		if (nav) window.location.href = nav.href;
+	});
+</script>
+
+<style>
+	footer {
+		margin-top: 24px;
+	}
+	.status-bar {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 4px 16px;
+		background: var(--ph);
+		color: var(--screen);
+		text-shadow: none;
+		padding: 2px 10px;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 2ch;
+	}
+	.status-bar a,
+	.phosphor-toggle {
+		color: var(--screen);
+		text-decoration: none;
+		text-shadow: none;
+		background: none;
+		border: none;
+		font: inherit;
+		padding: 0 4px;
+		cursor: pointer;
+	}
+	.status-bar a:hover,
+	.status-bar a:focus-visible,
+	.phosphor-toggle:hover,
+	.phosphor-toggle:focus-visible {
+		background: var(--screen);
+		color: var(--ph);
+		outline: none;
+	}
+	.keys {
+		margin: 6px 0 0;
+		font-size: 0.85em;
+	}
+	@media (hover: none) {
+		.keys {
+			display: none;
+		}
+	}
+</style>

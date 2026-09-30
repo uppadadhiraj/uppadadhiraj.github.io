@@ -1,0 +1,357 @@
+/* ════════════════════════════════════════════════════════════
+   RETRO TERMINAL THEME
+   Monochrome phosphor on a dark CRT. No rounded corners,
+   no gradients-as-decoration, no drop shadows, no easing.
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+	--ph: #33ff66;            /* phosphor: main text */
+	--ph-dim: #1f9e44;        /* secondary text, borders */
+	--ph-faint: #0c3d1b;      /* inline-code background, faint lines */
+	--screen: #030803;        /* the tube */
+	--ph-rgb: 51, 255, 102;
+	--img-tint: grayscale(1) sepia(1) hue-rotate(75deg) saturate(3) brightness(0.9);
+
+	--glow: 0 0 1px rgba(var(--ph-rgb), 0.9), 0 0 6px rgba(var(--ph-rgb), 0.45);
+
+	--fs: 22px;
+	--lh: 1.35;
+	--cols: 80ch;             /* a classic 80-column terminal */
+
+	color-scheme: dark;
+}
+
+:root[data-phosphor='amber'] {
+	--ph: #ffb000;
+	--ph-dim: #b87a00;
+	--ph-faint: #3d2a00;
+	--screen: #0a0600;
+	--ph-rgb: 255, 176, 0;
+	--img-tint: grayscale(1) sepia(1) hue-rotate(-8deg) saturate(3.5) brightness(0.95);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	border-radius: 0 !important; /* nothing rounded, ever */
+}
+
+html {
+	background: var(--screen);
+	scrollbar-color: var(--ph-dim) var(--screen);
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	background: var(--screen);
+	color: var(--ph);
+	font-family: 'VT323', 'Courier New', Courier, monospace;
+	font-size: var(--fs);
+	line-height: var(--lh);
+	text-shadow: var(--glow);
+	-webkit-font-smoothing: none;
+	font-smooth: never;
+	overflow-wrap: break-word;
+}
+
+/* CRT scanlines + dark tube edges, layered over everything */
+body::after {
+	content: '';
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 100;
+	background: repeating-linear-gradient(
+		to bottom,
+		rgba(0, 0, 0, 0.28) 0px,
+		rgba(0, 0, 0, 0.28) 1px,
+		transparent 1px,
+		transparent 3px
+	);
+	box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.85);
+}
+
+::selection {
+	background: var(--ph);
+	color: var(--screen);
+	text-shadow: none;
+}
+
+::-webkit-scrollbar {
+	width: 14px;
+	height: 14px;
+}
+::-webkit-scrollbar-track {
+	background: var(--screen);
+	border-left: 1px solid var(--ph-faint);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--ph-dim);
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+
+.crt {
+	max-width: calc(var(--cols) + 2 * 24px);
+	margin: 0 auto;
+	padding: 24px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+	padding: 8px 0 32px;
+}
+
+/* ── Type ───────────────────────────────────────────────── */
+
+h1,
+h2,
+h3,
+h4 {
+	font-weight: normal;
+	line-height: 1.1;
+	margin: 1.4em 0 0.5em;
+}
+h1 {
+	font-size: 2.1em;
+	text-transform: uppercase;
+}
+h2 {
+	font-size: 1.55em;
+}
+h3 {
+	font-size: 1.25em;
+}
+h4 {
+	font-size: 1.05em;
+	text-transform: uppercase;
+}
+
+p {
+	margin: 0 0 0.9em;
+}
+
+a {
+	color: var(--ph);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+a:hover,
+a:focus-visible {
+	background: var(--ph);
+	color: var(--screen);
+	text-shadow: none;
+	text-decoration: none;
+	outline: none;
+}
+
+strong,
+b {
+	font-weight: normal;
+	background: var(--ph-faint);
+	padding: 0 2px;
+}
+
+em,
+i {
+	font-style: normal;
+	text-decoration: underline dotted;
+	text-underline-offset: 3px;
+}
+
+hr {
+	border: none;
+	border-top: 1px dashed var(--ph-dim);
+	margin: 1.5em 0;
+}
+
+.dim {
+	color: var(--ph-dim);
+}
+
+.prompt {
+	color: var(--ph-dim);
+}
+.prompt + .cmd {
+	color: var(--ph);
+}
+
+.cursor {
+	display: inline-block;
+	width: 0.6em;
+	height: 1em;
+	vertical-align: -0.12em;
+	background: var(--ph);
+	box-shadow: var(--glow);
+	animation: blink 1s steps(1) infinite;
+}
+@keyframes blink {
+	50% {
+		opacity: 0;
+	}
+}
+
+.line {
+	margin: 0;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* ── Buttons that look like terminal keys ───────────────── */
+
+.key {
+	font: inherit;
+	color: var(--ph);
+	background: transparent;
+	border: 1px solid var(--ph-dim);
+	padding: 0 8px;
+	cursor: pointer;
+	text-shadow: inherit;
+}
+.key:hover,
+.key:focus-visible {
+	background: var(--ph);
+	color: var(--screen);
+	text-shadow: none;
+	outline: none;
+}
+
+/* ── Post body (Markdown) ───────────────────────────────── */
+
+.prose h2::before {
+	content: '## ';
+	color: var(--ph-dim);
+}
+.prose h3::before {
+	content: '### ';
+	color: var(--ph-dim);
+}
+.prose h4::before {
+	content: '#### ';
+	color: var(--ph-dim);
+}
+
+.prose ul {
+	list-style: none;
+	padding-left: 2ch;
+}
+.prose ul > li::before {
+	content: '*';
+	display: inline-block;
+	width: 2ch;
+	margin-left: -2ch;
+	color: var(--ph-dim);
+}
+.prose ol {
+	padding-left: 3ch;
+}
+.prose ol > li::marker {
+	color: var(--ph-dim);
+}
+.prose li {
+	margin-bottom: 0.25em;
+}
+
+.prose blockquote {
+	margin: 1.2em 0;
+	padding: 0;
+	color: var(--ph-dim);
+}
+.prose blockquote p::before {
+	content: '> ';
+}
+
+pre,
+code,
+kbd,
+samp {
+	/* browsers force a different monospace here; keep the terminal font */
+	font-family: 'VT323', 'Courier New', Courier, monospace;
+}
+code {
+	font-size: 1em;
+	background: var(--ph-faint);
+	padding: 0 4px;
+}
+pre {
+	margin: 1.2em 0;
+	padding: 12px 14px;
+	border: 1px solid var(--ph-dim);
+	background: transparent;
+	overflow-x: auto;
+	line-height: 1.2;
+}
+pre code {
+	background: none;
+	padding: 0;
+}
+
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.2em 0;
+	display: block;
+	overflow-x: auto;
+}
+.prose th,
+.prose td {
+	border: 1px solid var(--ph-dim);
+	padding: 2px 10px;
+	text-align: left;
+}
+.prose th {
+	background: var(--ph);
+	color: var(--screen);
+	text-shadow: none;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+.prose img,
+.hero img {
+	border: 1px solid var(--ph-dim);
+	filter: var(--img-tint);
+	margin: 1.2em 0;
+}
+/* hover (or tap) an image to see its real colours */
+.prose img:hover,
+.hero img:hover {
+	filter: none;
+}
+
+/* ── Small screens ──────────────────────────────────────── */
+
+@media (max-width: 640px) {
+	:root {
+		--fs: 20px;
+	}
+	.crt {
+		padding: 16px;
+	}
+	h1 {
+		font-size: 1.7em;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cursor {
+		animation: none;
+	}
+}
