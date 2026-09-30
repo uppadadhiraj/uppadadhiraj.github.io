@@ -18,7 +18,7 @@ const { posts, markNewest = false } = Astro.props;
 			return (
 				<li
 					class="post-item"
-					data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}
+					data-search={`${title} ${description} ${tags.join(' ')} ${isoDate(pubDate)}`.toLowerCase()}
 					data-tags={tags.map((t) => t.toLowerCase()).join(',')}
 				>
 					<a class="file" href={link(`/blog/${post.id}/`)}>

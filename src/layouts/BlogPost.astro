@@ -34,7 +34,9 @@ const { title, description, pubDate, updatedDate, heroImage, tags, draft } = pos
 				tags.length > 0 && (
 					<p class="tags">
 						{tags.map((t) => (
-							<span class="tag">{t}</span>
+							<a class="tag" href={link(`/blog/?tag=${encodeURIComponent(t.toLowerCase())}`)}>
+								{t}
+							</a>
 						))}
 					</p>
 				)

@@ -162,6 +162,35 @@ input.field:focus-visible {
 	box-shadow: var(--raised);
 }
 
+/* Tags that link to the filtered Posts page */
+a.tag {
+	text-decoration: none;
+}
+a.tag:visited {
+	color: #000;
+}
+a.tag:hover,
+a.tag:focus-visible {
+	color: #fff;
+	background: var(--navy);
+	outline: none;
+}
+
+.skip {
+	position: absolute;
+	left: 8px;
+	top: -60px;
+	z-index: 200;
+	padding: 8px 16px;
+	font-size: 14px;
+	color: #000;
+	background: var(--face);
+	box-shadow: var(--raised);
+}
+.skip:focus {
+	top: 8px;
+}
+
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -371,6 +400,39 @@ pre code {
 .hero-img img {
 	margin: 1.4em 0;
 	box-shadow: 0 0 0 1px #000;
+}
+
+/* ── Print: just the page, no window chrome ─────────────── */
+
+@media print {
+	.skip,
+	.titlebar,
+	.menubar,
+	.toolbar,
+	.statusbar,
+	.taskbar,
+	.post-nav,
+	.copy {
+		display: none !important;
+	}
+	html,
+	body,
+	.desktop,
+	.window,
+	.pane {
+		background: #fff !important;
+		box-shadow: none !important;
+		padding: 0 !important;
+		min-height: 0 !important;
+	}
+	a {
+		color: #000;
+	}
+	.codeblock,
+	pre {
+		box-shadow: none;
+		border: 1px solid #999;
+	}
 }
 
 /* ── Small screens ──────────────────────────────────────── */

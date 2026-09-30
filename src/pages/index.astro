@@ -8,6 +8,14 @@ import { getPosts, isoDate, link } from '../utils';
 
 const posts = await getPosts();
 const latest = posts.slice(0, 5);
+
+// How many posts were published on each calendar day (YYYY-MM-DD).
+const activity: Record<string, number> = {};
+for (const p of posts) {
+	const day = isoDate(p.data.pubDate);
+	activity[day] = (activity[day] ?? 0) + 1;
+}
+const archive = link('/blog/');
 ---
 
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -34,6 +42,20 @@ const latest = posts.slice(0, 5);
 		</div>
 	</section>
 
+	<!-- Filled in by the script below, since "today" is only known in the browser -->
+	<fieldset class="group progress" data-progress data-posts={JSON.stringify(activity)} hidden>
+		<legend>Progress</legend>
+		<div class="body">
+			<div class="grid" id="grid" role="img" aria-label="Posts per day over the last 12 weeks"></div>
+			<dl class="numbers">
+				<div><dt>Current streak</dt><dd><span id="streak">0</span> days</dd></div>
+				<div><dt>Best streak</dt><dd><span id="best">0</span> days</dd></div>
+				<div><dt>Days posted</dt><dd><span id="days">0</span></dd></div>
+			</dl>
+		</div>
+		<p class="caption muted">Last 12 weeks. Click a day to see its posts.</p>
+	</fieldset>
+
 	<h2>Latest posts</h2>
 	<PostList posts={latest} markNewest />
 	{
@@ -45,7 +67,139 @@ const latest = posts.slice(0, 5);
 	}
 </Base>
 
+<script define:vars={{ archive }}>
+	const panel = document.querySelector('[data-progress]');
+	const grid = document.getElementById('grid');
+	if (panel && grid) {
+		const counts = JSON.parse(panel.dataset.posts || '{}');
+		const WEEKS = 12;
+		const DAY = 86400000;
+
+		// Work in whole days at UTC midnight so daylight saving never shifts a date.
+		const key = (t) => new Date(t).toISOString().slice(0, 10);
+		const now = new Date();
+		const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+		const start = today - now.getDay() * DAY - (WEEKS - 1) * 7 * DAY; // a Sunday
+
+		for (let t = start; t < start + WEEKS * 7 * DAY; t += DAY) {
+			const date = key(t);
+			const n = counts[date] || 0;
+			let cell;
+			if (t > today) {
+				cell = document.createElement('span');
+				cell.className = 'cell future';
+			} else if (n > 0) {
+				cell = document.createElement('a');
+				cell.className = 'cell on' + (n > 1 ? ' many' : '');
+				cell.href = archive + '?q=' + date;
+				cell.title = date + ': ' + n + (n === 1 ? ' post' : ' posts');
+				cell.setAttribute('aria-label', cell.title);
+			} else {
+				cell = document.createElement('span');
+				cell.className = 'cell';
+				cell.title = date;
+			}
+			if (t === today) cell.classList.add('today');
+			grid.append(cell);
+		}
+
+		// Current streak: consecutive days with a post, ending today
+		// (or yesterday, so the streak survives until the day is over).
+		let streak = 0;
+		let t = counts[key(today)] ? today : today - DAY;
+		while (counts[key(t)]) {
+			streak++;
+			t -= DAY;
+		}
+
+		// Best streak across all posts.
+		const dates = Object.keys(counts).sort();
+		let best = 0;
+		let run = 0;
+		let prev = null;
+		for (const d of dates) {
+			const time = Date.parse(d + 'T00:00:00Z');
+			run = prev !== null && time - prev === DAY ? run + 1 : 1;
+			best = Math.max(best, run);
+			prev = time;
+		}
+
+		document.getElementById('streak').textContent = streak;
+		document.getElementById('best').textContent = best;
+		document.getElementById('days').textContent = dates.length;
+		panel.hidden = false;
+	}
+</script>
+
 <style>
+	.progress {
+		margin-bottom: 40px;
+	}
+	.progress legend {
+		padding: 0 6px;
+		font-size: 14px;
+	}
+	.body {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 20px 40px;
+	}
+	.grid {
+		display: grid;
+		grid-auto-flow: column;
+		grid-template-rows: repeat(7, 18px);
+		grid-auto-columns: 18px;
+		gap: 3px;
+	}
+	.grid :global(.cell) {
+		display: block;
+		background: var(--paper);
+		box-shadow: var(--sunken);
+	}
+	.grid :global(.cell.on) {
+		background: var(--navy);
+		box-shadow: var(--raised);
+	}
+	.grid :global(.cell.many) {
+		background: #1084d0;
+	}
+	.grid :global(a.cell:hover) {
+		outline: 2px solid #c00000;
+		outline-offset: 0;
+	}
+	.grid :global(.cell.future) {
+		background: none;
+		box-shadow: none;
+	}
+	.grid :global(.cell.today) {
+		outline: 2px solid #000;
+		outline-offset: -1px;
+	}
+	.numbers {
+		margin: 0;
+		display: grid;
+		gap: 6px;
+		font-size: 14.5px;
+	}
+	.numbers div {
+		display: flex;
+		gap: 12px;
+		justify-content: space-between;
+		min-width: 190px;
+	}
+	.numbers dt {
+		color: var(--muted);
+	}
+	.numbers dd {
+		margin: 0;
+		font-weight: 700;
+	}
+	.caption {
+		margin: 14px 0 0;
+		font-size: 13px;
+	}
+
 	.welcome {
 		margin-bottom: 40px;
 	}

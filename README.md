@@ -51,8 +51,12 @@ Posts are plain Markdown files. No database, no server, no cost.
 
 ## Finding old posts
 
-The **Posts** page groups everything by month and has a search box plus tag buttons, so you can
-jump back to any day's notes. Code blocks in posts have a **Copy** button.
+- The **Posts** page groups everything by month and has a search box plus tag buttons.
+  Filters are saved in the address, so `/blog/?tag=java` or `/blog/?q=2026-09-30` can be
+  bookmarked or shared. Tags on a post link straight to that filter.
+- The home page has a **Progress** panel: your current streak, best streak, days posted, and a
+  12-week calendar. Click a filled day to see that day's posts.
+- Code blocks show their language and have a **Copy** button.
 
 ## Run it on your computer
 
@@ -64,6 +68,16 @@ npm run dev
 ```
 
 Open http://localhost:4321. The page reloads as you edit.
+
+## Check everything before you push
+
+```bash
+npm run check
+```
+
+This builds the site and verifies every link, image, title and heading, that drafts stay
+hidden, and that each post is in the feed and sitemap. It prints what is wrong, if anything.
+`npm run typecheck` checks the code itself.
 
 ## Change the look
 
@@ -94,6 +108,9 @@ src/
 ├─ sprites.ts           pixel icon
 ├─ components/          window chrome, taskbar, post list
 ├─ layouts/             page shell and post layout
-├─ pages/               home, posts, about, 404, rss
+├─ pages/               home, posts, about, 404, rss, robots.txt
 └─ content/blog/        your posts (.md) and images/
+
+scripts/
+└─ check-site.mjs       the checks behind `npm run check`
 ```
