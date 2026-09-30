@@ -76,7 +76,7 @@ Open http://localhost:4321. The page reloads as you edit.
 | `astro.config.mjs` | The site address (`site:`) |
 
 The look is a 90s Windows-style desktop: teal background, a grey window with a title bar, menu bar and
-address bar, a taskbar with a working Start menu and clock, and dialog boxes on the About and 404 pages.
+address bar, a taskbar with a working Start menu and clock, a Welcome dialog on the home page and an error dialog on the 404 page.
 
 ## Publishing setup (one time)
 
