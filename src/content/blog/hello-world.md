@@ -1,7 +1,8 @@
 ---
 title: 'Hello, world'
 description: 'First post. What this blog is, and what I plan to write about.'
-pubDate: '2026-09-30'
+pubDate: '2026-09-29'
+tags: ['meta']
 ---
 
 Every programmer's first program prints *hello, world*. So does this blog.

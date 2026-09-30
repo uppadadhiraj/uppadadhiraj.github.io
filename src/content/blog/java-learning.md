@@ -2,6 +2,7 @@
 title: 'Learned how to find the length in array'
 description: 'Write arr.length and you will get the length of the array'
 pubDate: '2026-09-30'
+tags: ['java']
 ---
 
 ### Code

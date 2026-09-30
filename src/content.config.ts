@@ -12,6 +12,8 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// tags: ['java', 'arrays'] → shown on the post and usable as filters on the Posts page
+			tags: z.array(z.string()).default([]),
 			// draft: true → visible with `npm run dev`, hidden on the live site
 			draft: z.boolean().default(false),
 		}),

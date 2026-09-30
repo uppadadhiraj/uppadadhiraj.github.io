@@ -17,9 +17,10 @@ Start it with this block (the *frontmatter*):
 ---
 title: 'Running AI on a Raspberry Pi 3B'
 description: 'One line that shows up in the post list.'
-pubDate: '2026-10-05'
+pubDate: '2026-10-05'          # add a time (2026-10-05T18:30) to order two posts on the same day
 updatedDate: '2026-10-07'   # optional
 heroImage: './images/cover.png'  # optional
+tags: ['java', 'arrays']    # optional: shown on the post, used as filters on the Posts page
 draft: true                 # optional: hides it from the live site
 ---
 ```
@@ -42,7 +43,7 @@ Plain paragraphs, **bold**, *italic*, `inline code` and [links](https://astro.bu
 
 ### Quotes
 
-> Quotes get a terminal-style marker in front of each paragraph.
+> Quotes get a cyan bar down the left side.
 
 ### Code
 

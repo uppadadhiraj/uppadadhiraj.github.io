@@ -1,0 +1,31 @@
+---
+interface Props {
+	art: string[];
+	/** Size of one pixel on screen, in CSS px. */
+	size?: number;
+	class?: string;
+}
+
+const { art, size = 4, class: className } = Astro.props;
+const height = art.length;
+const width = Math.max(...art.map((row) => row.length));
+const pixels: { x: number; y: number }[] = [];
+art.forEach((row, y) => {
+	[...row].forEach((ch, x) => {
+		if (ch === '#') pixels.push({ x, y });
+	});
+});
+---
+
+<svg
+	class={className}
+	width={width * size}
+	height={height * size}
+	viewBox={`0 0 ${width} ${height}`}
+	shape-rendering="crispEdges"
+	fill="currentColor"
+	aria-hidden="true"
+	focusable="false"
+>
+	{pixels.map((p) => <rect x={p.x} y={p.y} width="1" height="1" />)}
+</svg>

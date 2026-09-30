@@ -1,38 +1,54 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { isoDate, link } from '../utils';
+import { dateParts, link } from '../utils';
 
 interface Props {
 	posts: CollectionEntry<'blog'>[];
+	/** Show a blinking NEW! badge on the first post (used on the home page). */
+	markNewest?: boolean;
 }
 
-const { posts } = Astro.props;
+const { posts, markNewest = false } = Astro.props;
 ---
 
-{
-	posts.length === 0 ? (
-		<p class="muted">No posts yet.</p>
-	) : (
-		<ul class="posts">
-			{posts.map((post, i) => (
-				<li>
-					<a class="card" href={link(`/blog/${post.id}/`)}>
-						<span class="ico" aria-hidden="true">📄</span>
-						<span class="body">
-							<time datetime={post.data.pubDate.toISOString()}>{isoDate(post.data.pubDate)}</time>
-							<strong>
-								{post.data.title}
-								{post.data.draft && <span class="draft">DRAFT</span>}
-								{i === 0 && <span class="new blink">NEW!</span>}
-							</strong>
-							<span class="desc">{post.data.description}</span>
+<ul class="posts">
+	{
+		posts.map((post, i) => {
+			const { mon, day, year } = dateParts(post.data.pubDate);
+			const { title, description, tags, draft, pubDate } = post.data;
+			return (
+				<li
+					class="post-item"
+					data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}
+					data-tags={tags.map((t) => t.toLowerCase()).join(',')}
+				>
+					<a class="card px" href={link(`/blog/${post.id}/`)}>
+						<time class="date" datetime={pubDate.toISOString()}>
+							<span class="mon">{mon}</span>
+							<span class="day">{day}</span>
+							<span class="year">{year}</span>
+						</time>
+						<span class="info">
+							<span class="title">
+								{title}
+								{draft && <span class="badge">DRAFT</span>}
+								{markNewest && i === 0 && <span class="badge new blink">NEW!</span>}
+							</span>
+							<span class="desc">{description}</span>
+							{tags.length > 0 && (
+								<span class="tags">
+									{tags.map((t) => (
+										<span class="tag">{t}</span>
+									))}
+								</span>
+							)}
 						</span>
 					</a>
 				</li>
-			))}
-		</ul>
-	)
-}
+			);
+		})
+	}
+</ul>
 
 <style>
 	.posts {
@@ -40,63 +56,99 @@ const { posts } = Astro.props;
 		margin: 0;
 		padding: 0;
 		display: grid;
-		gap: 12px;
+		gap: 24px;
 	}
 	.card {
-		display: flex;
-		gap: 14px;
-		align-items: flex-start;
-		padding: 12px 16px;
-		background: var(--face);
-		box-shadow: var(--raised);
-		color: #000;
+		display: grid;
+		grid-template-columns: 84px minmax(0, 1fr);
+		gap: 18px;
+		align-items: start;
+		padding: 16px 18px;
+		color: var(--text);
 		text-decoration: none;
 	}
-	.card:visited {
-		color: #000;
-	}
 	.card:hover {
-		background: var(--accent-soft);
-	}
-	.card:hover strong {
-		color: var(--accent);
-		text-decoration: underline;
+		--c: var(--cyan);
+		background: var(--panel-2);
 	}
 	.card:active {
-		box-shadow: var(--sunken);
+		transform: translate(2px, 2px);
 	}
-	.ico {
-		font-size: 1.6rem;
-		line-height: 1.2;
-	}
-	.body {
+	.date {
 		display: flex;
 		flex-direction: column;
-		min-width: 0;
+		align-items: center;
+		gap: 6px;
+		padding: 10px 4px;
+		background: var(--ink);
+		font-family: var(--pixel);
+		line-height: 1;
+		box-shadow:
+			0 -2px 0 0 var(--line-dim),
+			0 2px 0 0 var(--line-dim),
+			-2px 0 0 0 var(--line-dim),
+			2px 0 0 0 var(--line-dim);
 	}
-	time {
-		font-size: 0.8rem;
+	.mon {
+		font-size: 0.6rem;
+		color: var(--pink);
+	}
+	.day {
+		font-size: 1.3rem;
+		color: var(--yellow);
+	}
+	.year {
+		font-size: 0.5rem;
 		color: var(--muted);
 	}
-	strong {
-		font-size: 1.1rem;
+	.info {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		min-width: 0;
+	}
+	.title {
+		font-size: 1.7rem;
+		line-height: 1.15;
+		color: var(--yellow);
+		overflow-wrap: anywhere;
+	}
+	.card:hover .title {
+		color: var(--cyan);
 	}
 	.desc {
 		color: var(--muted);
+		overflow-wrap: anywhere;
 	}
-	.new {
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 4px;
+	}
+	.badge {
+		display: inline-block;
 		margin-left: 8px;
+		padding: 3px 5px;
 		font-family: var(--pixel);
-		font-size: 0.6rem;
-		color: #f00;
+		font-size: 0.5rem;
+		line-height: 1;
 		vertical-align: middle;
+		background: var(--line);
+		color: var(--text);
 	}
-	.draft {
-		margin-left: 8px;
-		padding: 0 6px;
-		font-size: 0.7rem;
-		background: #000080;
-		color: #fff;
-		vertical-align: middle;
+	.badge.new {
+		background: var(--pink);
+		color: var(--ink);
+	}
+	@media (max-width: 520px) {
+		.card {
+			grid-template-columns: 68px minmax(0, 1fr);
+			gap: 14px;
+			padding: 14px;
+		}
+		.title {
+			font-size: 1.5rem;
+		}
 	}
 </style>

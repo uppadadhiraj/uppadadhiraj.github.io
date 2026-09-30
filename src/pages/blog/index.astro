@@ -1,13 +1,155 @@
 ---
 import PostList from '../../components/PostList.astro';
 import Base from '../../layouts/Base.astro';
-import { getPosts } from '../../utils';
+import { getPosts, monthLabel } from '../../utils';
 
 const posts = await getPosts();
+
+// Group by month, newest first (posts are already sorted).
+const groups: { label: string; posts: typeof posts }[] = [];
+for (const post of posts) {
+	const label = monthLabel(post.data.pubDate);
+	const last = groups[groups.length - 1];
+	if (last && last.label === label) last.posts.push(post);
+	else groups.push({ label, posts: [post] });
+}
+
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags.map((t) => t.toLowerCase())))].sort();
 ---
 
 <Base title="Posts" description="Every post on this blog, newest first.">
-	<h1>Posts</h1>
-	<p class="muted">{posts.length} {posts.length === 1 ? 'post' : 'posts'}, newest first.</p>
-	<PostList posts={posts} />
+	<h1>Post archive</h1>
+	<p class="muted intro">{posts.length} {posts.length === 1 ? 'post' : 'posts'}, newest first.</p>
+
+	<!-- Search and tag filters only work with JavaScript, so they stay hidden without it -->
+	<div class="controls px" data-controls hidden>
+		<label class="sr-only" for="q">Search posts</label>
+		<input id="q" type="search" placeholder="Search posts..." autocomplete="off" />
+		{
+			allTags.length > 0 && (
+				<div class="chips" role="group" aria-label="Filter by tag">
+					<button type="button" class="chip btn is-current" data-tag="" aria-pressed="true">
+						All
+					</button>
+					{allTags.map((t) => (
+						<button type="button" class="chip btn" data-tag={t} aria-pressed="false">
+							{t}
+						</button>
+					))}
+				</div>
+			)
+		}
+		<p class="status" id="status" aria-live="polite"></p>
+	</div>
+
+	<p class="empty px" id="empty" hidden>No posts match. Try another word.</p>
+
+	{
+		groups.map((g) => (
+			<section class="month">
+				<h2>{g.label}</h2>
+				<PostList posts={g.posts} />
+			</section>
+		))
+	}
 </Base>
+
+<script>
+	const controls = document.querySelector<HTMLElement>('[data-controls]');
+	const input = document.querySelector<HTMLInputElement>('#q');
+	const status = document.querySelector<HTMLElement>('#status');
+	const empty = document.querySelector<HTMLElement>('#empty');
+	const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+	const items = [...document.querySelectorAll<HTMLElement>('.post-item')];
+	const months = [...document.querySelectorAll<HTMLElement>('.month')];
+
+	if (controls && input && status && empty) {
+		controls.hidden = false;
+		let tag = '';
+
+		const apply = () => {
+			const q = input.value.trim().toLowerCase();
+			let shown = 0;
+			for (const li of items) {
+				const matchesText = !q || (li.dataset.search ?? '').includes(q);
+				const matchesTag = !tag || (li.dataset.tags ?? '').split(',').includes(tag);
+				li.hidden = !(matchesText && matchesTag);
+				if (!li.hidden) shown++;
+			}
+			for (const m of months) m.hidden = !m.querySelector('.post-item:not([hidden])');
+			empty.hidden = shown > 0;
+			const filtering = q !== '' || tag !== '';
+			status.textContent = filtering ? `${shown} of ${items.length} shown` : '';
+		};
+
+		input.addEventListener('input', apply);
+		for (const chip of chips) {
+			chip.addEventListener('click', () => {
+				tag = chip.dataset.tag ?? '';
+				for (const c of chips) {
+					const on = c === chip;
+					c.classList.toggle('is-current', on);
+					c.setAttribute('aria-pressed', String(on));
+				}
+				apply();
+			});
+		}
+	}
+</script>
+
+<style>
+	.intro {
+		margin-bottom: 28px;
+	}
+	.controls {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		padding: 18px;
+		margin-bottom: 40px;
+	}
+	input {
+		width: 100%;
+		font: inherit;
+		font-size: 1.4rem;
+		color: var(--text);
+		background: var(--ink);
+		border: 0;
+		padding: 10px 14px;
+		box-shadow:
+			0 -2px 0 0 var(--line-dim),
+			0 2px 0 0 var(--line-dim),
+			-2px 0 0 0 var(--line-dim),
+			2px 0 0 0 var(--line-dim);
+	}
+	input::placeholder {
+		color: var(--muted);
+	}
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+	}
+	.chip {
+		font-size: 0.6rem;
+		padding: 9px 11px;
+	}
+	.status {
+		margin: 0;
+		min-height: 1.45em;
+		font-family: var(--pixel);
+		font-size: 0.55rem;
+		color: var(--muted);
+	}
+	.empty {
+		padding: 18px 20px;
+		margin-bottom: 40px;
+		color: var(--pink);
+	}
+	.month {
+		margin-bottom: 44px;
+	}
+	.month h2 {
+		margin-top: 0;
+	}
+</style>

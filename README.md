@@ -19,6 +19,7 @@ Posts are plain Markdown files. No database, no server, no cost.
    title: 'My post title'
    description: 'One line shown in the post list.'
    pubDate: '2026-10-05'
+   tags: ['java', 'arrays']
    ---
 
    Write your post here, in Markdown.
@@ -43,8 +44,15 @@ Posts are plain Markdown files. No database, no server, no cost.
 5. Open the **Actions** tab of the repo. When "Deploy to GitHub Pages" shows a green tick
    (about a minute), the post is live on the site.
 
-Add `draft: true` to the top block to keep a post hidden from the live site. It still shows
-when you run the site on your own computer.
+- `tags` are optional. They show on the post and become filter buttons on the Posts page.
+- Two posts on the same day? Add a time so they sort correctly: `pubDate: '2026-10-05T18:30'`.
+- Add `draft: true` to keep a post hidden from the live site. It still shows when you run the
+  site on your own computer.
+
+## Finding old posts
+
+The **Posts** page groups everything by month and has a search box plus tag buttons, so you can
+jump back to any day's notes. Code blocks in posts have a **Copy** button.
 
 ## Run it on your computer
 
@@ -63,10 +71,12 @@ Open http://localhost:4321. The page reloads as you edit.
 |------|------------------|
 | `src/consts.ts` | Blog name, tagline, your name, GitHub link |
 | `src/styles/global.css` | Colours and fonts (see `:root` at the top) |
+| `src/sprites.ts` | The pixel art (one string per row) |
 | `src/pages/about.astro` | The About page text |
 | `astro.config.mjs` | The site address (`site:`) |
 
-The look is a 90s Windows-style desktop: teal background, grey beveled windows and navy title bars.
+The look is an 8-bit arcade theme: pixel fonts, notched pixel borders, a starfield background and
+pixel-art sprites (see `src/sprites.ts` to draw your own).
 
 ## Publishing setup (one time)
 
@@ -81,7 +91,8 @@ After that, every `git push` to `main` updates the site.
 src/
 ├─ consts.ts            site name, author, links
 ├─ styles/global.css    the whole look
-├─ components/          header, footer, post list
+├─ sprites.ts           pixel art
+├─ components/          header, footer, post list, sprite
 ├─ layouts/             page shell and post layout
 ├─ pages/               home, posts, about, 404, rss
 └─ content/blog/        your posts (.md) and images/

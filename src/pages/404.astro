@@ -4,7 +4,34 @@ import { link } from '../utils';
 ---
 
 <Base title="404" description="Page not found.">
-	<h1>Page not found</h1>
-	<p class="muted">That page doesn't exist, or it moved somewhere else.</p>
-	<p><a href={link('/')}>← Back home</a> · <a href={link('/blog/')}>All posts</a></p>
+	<section class="over px">
+		<p class="code">404</p>
+		<h1>Game over</h1>
+		<p class="muted">That page doesn't exist, or it moved somewhere else.</p>
+		<p class="actions">
+			<a class="btn is-primary" href={link('/')}>Continue? Home</a>
+			<a class="btn" href={link('/blog/')}>All posts</a>
+		</p>
+	</section>
 </Base>
+
+<style>
+	.over {
+		padding: 40px 32px;
+		text-align: center;
+	}
+	.code {
+		margin: 0 0 20px;
+		font-family: var(--pixel);
+		font-size: clamp(2.5rem, 14vw, 5rem);
+		line-height: 1;
+		color: var(--pink);
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 20px;
+		margin: 28px 0 0;
+	}
+</style>

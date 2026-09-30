@@ -1,19 +1,114 @@
 ---
+import Sprite from '../components/Sprite.astro';
 import Base from '../layouts/Base.astro';
 import { AUTHOR, GITHUB_URL } from '../consts';
+import { CONTROLLER } from '../sprites';
+
+// Edit these lines to describe yourself.
+const stats = [
+	['NAME', AUTHOR],
+	['CLASS', 'BTech student'],
+	['LEARNING', 'Java'],
+	['ALSO USES', 'Python, JavaScript'],
+	['QUEST', 'Post something new every day'],
+];
 ---
 
 <Base title="About" description={`Who is ${AUTHOR}?`}>
 	<h1>About</h1>
-	<div class="prose">
+
+	<section class="sheet px">
+		<div class="portrait" aria-hidden="true">
+			<Sprite art={CONTROLLER} size={8} class="pad" />
+			<span class="label">PLAYER 1</span>
+		</div>
+		<dl>
+			{
+				stats.map(([label, value]) => (
+					<div class="row">
+						<dt>{label}</dt>
+						<dd>{value}</dd>
+					</div>
+				))
+			}
+		</dl>
+	</section>
+
+	<section class="story px prose">
 		<p>
-			Hi, I'm {AUTHOR}. I'm a 4th-year BTech student learning Python, Java and JavaScript, and I
-			like building things that probably shouldn't run on the hardware I give them.
+			Hi, I'm {AUTHOR}. I'm learning to code, and I write down what I learn as I go.
 		</p>
 		<p>
-			This blog is where I write up what I'm learning: build logs, bug hunts, and short notes like
-			"how to find the length of an array".
+			This blog is my progress log: short notes, small programs and the bugs I ran into. If
+			something clicked for me today, it goes here so I can find it again later.
 		</p>
 		<p>Find me on <a href={GITHUB_URL}>GitHub</a>.</p>
-	</div>
+	</section>
 </Base>
+
+<style>
+	.sheet {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 32px;
+		align-items: center;
+		padding: 28px 32px;
+		margin-bottom: 40px;
+	}
+	.portrait {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+	}
+	.portrait :global(.pad) {
+		color: var(--cyan);
+	}
+	.label {
+		font-family: var(--pixel);
+		font-size: 0.6rem;
+		color: var(--pink);
+	}
+	dl {
+		margin: 0;
+		display: grid;
+		gap: 14px;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 11ch minmax(0, 1fr);
+		gap: 6px 16px;
+		align-items: baseline;
+	}
+	dt {
+		font-family: var(--pixel);
+		font-size: 0.6rem;
+		color: var(--yellow);
+	}
+	dd {
+		margin: 0;
+	}
+	.story {
+		padding: 28px 32px 12px;
+	}
+	@media (max-width: 640px) {
+		.sheet {
+			grid-template-columns: minmax(0, 1fr);
+			padding: 22px 18px;
+			justify-items: start;
+		}
+		.portrait {
+			flex-direction: row;
+		}
+		.portrait :global(.pad) {
+			width: 78px;
+			height: 45px;
+		}
+		.row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.story {
+			padding: 22px 18px 6px;
+		}
+	}
+</style>

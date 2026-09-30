@@ -12,29 +12,40 @@ interface Props {
 }
 
 const { post, newer, older } = Astro.props;
-const { title, description, pubDate, updatedDate, heroImage, draft } = post.data;
+const { title, description, pubDate, updatedDate, heroImage, tags, draft } = post.data;
 ---
 
 <Base title={title} description={description} image={heroImage}>
-	<article>
+	<p class="back"><a class="btn" href={link('/blog/')}>&lt; All posts</a></p>
+
+	<article class="px">
 		<header class="post-head">
-			<h1>{title}{draft && <span class="muted"> (draft)</span>}</h1>
-			<p class="meta muted">
+			<h1>{title}{draft && <span class="muted"> [draft]</span>}</h1>
+			<p class="meta">
 				<time datetime={pubDate.toISOString()}>{isoDate(pubDate)}</time>
 				{
 					updatedDate && (
-						<>
-							{' '}· updated <time datetime={updatedDate.toISOString()}>{isoDate(updatedDate)}</time>
-						</>
+						<span>
+							updated <time datetime={updatedDate.toISOString()}>{isoDate(updatedDate)}</time>
+						</span>
 					)
 				}
-				{' '}· {readMinutes(post.body)} min read
+				<span>{readMinutes(post.body)} min read</span>
 			</p>
+			{
+				tags.length > 0 && (
+					<p class="tags">
+						{tags.map((t) => (
+							<span class="tag">{t}</span>
+						))}
+					</p>
+				)
+			}
 		</header>
 
 		{
 			heroImage && (
-				<div class="hero">
+				<div class="hero-img">
 					<Image width={1020} height={510} src={heroImage} alt="" />
 				</div>
 			)
@@ -45,39 +56,121 @@ const { title, description, pubDate, updatedDate, heroImage, draft } = post.data
 		</div>
 	</article>
 
-	<nav class="post-nav" aria-label="More posts">
-		{older && <a href={link(`/blog/${older.id}/`)}>← {older.data.title}</a>}
-		{newer && <a class="right" href={link(`/blog/${newer.id}/`)}>{newer.data.title} →</a>}
-		<a class="all" href={link('/blog/')}>All posts</a>
-	</nav>
+	{
+		(older || newer) && (
+			<nav class="post-nav" aria-label="More posts">
+				{older ? (
+					<a class="btn older" href={link(`/blog/${older.id}/`)}>
+						<span class="dir">&lt; Older</span>
+						<span class="t">{older.data.title}</span>
+					</a>
+				) : (
+					<span />
+				)}
+				{newer && (
+					<a class="btn newer" href={link(`/blog/${newer.id}/`)}>
+						<span class="dir">Newer &gt;</span>
+						<span class="t">{newer.data.title}</span>
+					</a>
+				)}
+			</nav>
+		)
+	}
 </Base>
 
+<script>
+	// Give every code block a header with its language and a copy button.
+	document.querySelectorAll<HTMLPreElement>('.prose pre').forEach((pre) => {
+		const lang = pre.querySelector('code')?.className.match(/language-(\S+)/)?.[1] ?? 'code';
+
+		const bar = document.createElement('div');
+		bar.className = 'codebar';
+		const label = document.createElement('span');
+		label.textContent = lang;
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'copy';
+		button.textContent = 'Copy';
+		bar.append(label, button);
+
+		const wrap = document.createElement('div');
+		wrap.className = 'codeblock';
+		pre.replaceWith(wrap);
+		wrap.append(bar, pre);
+
+		button.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(pre.textContent ?? '');
+				button.textContent = 'Copied!';
+			} catch {
+				button.textContent = 'Failed';
+			}
+			setTimeout(() => (button.textContent = 'Copy'), 1500);
+		});
+	});
+</script>
+
 <style>
+	.back {
+		margin: 0 0 32px;
+	}
+	article {
+		padding: 32px 36px 36px;
+	}
 	.post-head {
-		padding-bottom: 16px;
-		margin-bottom: 24px;
-		border-bottom: 1px solid var(--border);
+		padding-bottom: 20px;
+		margin-bottom: 28px;
+		background: repeating-linear-gradient(90deg, var(--line-dim) 0 8px, transparent 8px 16px) bottom / 100% 4px
+			no-repeat;
 	}
 	.post-head h1 {
-		margin-bottom: 6px;
+		margin-bottom: 18px;
 	}
 	.meta {
-		margin: 0;
-		font-size: 0.95rem;
-	}
-	.post-nav {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 8px 24px;
-		margin-top: 48px;
-		padding-top: 16px;
-		border-top: 1px solid var(--border);
-	}
-	.right {
-		margin-left: auto;
-	}
-	.all {
-		flex-basis: 100%;
+		gap: 4px 20px;
+		margin: 0 0 14px;
 		color: var(--muted);
+	}
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin: 0;
+	}
+	.post-nav {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 28px;
+		margin-top: 44px;
+	}
+	.post-nav .btn {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 14px 16px;
+		line-height: 1.4;
+	}
+	.newer {
+		grid-column: 2;
+		text-align: right;
+	}
+	.t {
+		font-family: var(--body);
+		font-size: 1.3rem;
+		text-transform: none;
+		overflow-wrap: anywhere;
+	}
+	@media (max-width: 640px) {
+		article {
+			padding: 22px 18px 26px;
+		}
+		.post-nav {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.newer {
+			grid-column: 1;
+		}
 	}
 </style>

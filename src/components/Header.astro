@@ -1,5 +1,7 @@
 ---
+import Sprite from './Sprite.astro';
 import { SITE_TITLE } from '../consts';
+import { INVADER } from '../sprites';
 import { link } from '../utils';
 
 const path = Astro.url.pathname;
@@ -12,16 +14,16 @@ const items = [
 ---
 
 <header>
-	<div class="titlebar">
-		<a class="site-title" href={home}>{SITE_TITLE}</a>
-		<span class="wbtns" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
-	</div>
+	<a class="brand" href={home} aria-label={`${SITE_TITLE}, home`}>
+		<Sprite art={INVADER} size={4} class="brand-sprite" />
+		<span>{SITE_TITLE}</span>
+	</a>
 	<nav aria-label="Main">
 		{
 			items.map((item) => (
 				<a
 					href={item.href}
-					class:list={['nav-link', { active: item.active }]}
+					class:list={['btn', { 'is-current': item.active }]}
 					aria-current={item.active ? 'page' : undefined}
 				>
 					{item.label}
@@ -32,62 +34,45 @@ const items = [
 </header>
 
 <style>
-	.titlebar {
+	header {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
-		gap: 12px;
-		padding: 3px 4px 3px 8px;
-		background: linear-gradient(90deg, #000080, #1084d0);
+		gap: 20px 24px;
+		padding: 32px 0 28px;
 	}
-	.site-title {
-		color: #fff;
-		font-weight: 700;
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 14px;
 		font-family: var(--pixel);
-		font-weight: normal;
-		font-size: 0.75rem;
+		font-size: clamp(0.8rem, 3.6vw, 1rem);
+		color: var(--yellow);
 		text-decoration: none;
-		text-shadow: 1px 1px 0 #000;
 	}
-	.site-title:visited,
-	.site-title:hover {
-		color: #fff;
+	.brand :global(.brand-sprite) {
+		color: var(--green);
+		flex-shrink: 0;
 	}
-	.wbtns {
-		display: flex;
-		gap: 2px;
+	.brand:hover {
+		color: var(--cyan);
 	}
-	.wbtns i {
-		width: 18px;
-		height: 16px;
-		display: grid;
-		place-items: center;
-		font: 700 12px/1 var(--font);
-		font-style: normal;
-		color: #000;
-		background: var(--face);
-		box-shadow: var(--raised);
+	.brand:hover :global(.brand-sprite) {
+		color: var(--pink);
 	}
 	nav {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		padding: 6px 2px;
+		gap: 14px;
 	}
-	.nav-link {
-		padding: 3px 18px;
-		color: #000;
-		text-decoration: none;
-		background: var(--face);
-		box-shadow: var(--raised);
-	}
-	.nav-link:visited,
-	.nav-link:hover {
-		color: #000;
-	}
-	.nav-link:active,
-	.nav-link.active {
-		box-shadow: var(--sunken);
-		font-weight: 700;
+	@media (max-width: 520px) {
+		nav {
+			width: 100%;
+		}
+		nav .btn {
+			flex: 1;
+			text-align: center;
+			padding-inline: 6px;
+		}
 	}
 </style>

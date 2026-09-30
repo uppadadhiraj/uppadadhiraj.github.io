@@ -11,18 +11,31 @@ export async function getPosts(): Promise<CollectionEntry<'blog'>[]> {
 	const posts = await getCollection('blog', ({ data }) =>
 		import.meta.env.PROD ? !data.draft : true,
 	);
-	return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	return posts.sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf() || b.id.localeCompare(a.id),
+	);
 }
+
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
 /** 2026-09-30 */
 export function isoDate(date: Date): string {
 	return date.toISOString().slice(0, 10);
 }
 
-/** "4.2K" style file size of the raw Markdown. */
-export function fileSize(body = ''): string {
-	const bytes = new TextEncoder().encode(body).length;
-	return bytes < 1024 ? `${bytes}B` : `${(bytes / 1024).toFixed(1)}K`;
+/** { mon: 'SEP', day: '30', year: '2026' } (UTC, so the date never shifts by timezone) */
+export function dateParts(date: Date) {
+	return {
+		mon: MONTHS[date.getUTCMonth()],
+		day: String(date.getUTCDate()).padStart(2, '0'),
+		year: String(date.getUTCFullYear()),
+	};
+}
+
+/** "SEP 2026", used to group the archive. */
+export function monthLabel(date: Date): string {
+	const { mon, year } = dateParts(date);
+	return `${mon} ${year}`;
 }
 
 /** Rough reading time in minutes. */
