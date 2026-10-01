@@ -27,3 +27,6 @@ Need to prepare for this exam it is the paper based exam conducted by the colleg
 
 I don't want to play the match on the 3rd. Need to skip the match on that day by telling leg injury and exam on that day. 
 
+**Drive on 8th,Oct 2026**
+
+Lloyds Placement Drive is scheduled for 8th October.
